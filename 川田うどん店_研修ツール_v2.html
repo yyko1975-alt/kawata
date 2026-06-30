@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>川田うどん店 お仕事研修 v2</title>
+<style>
+  :root{
+    --brown:#6b4423; --brown-d:#4a2e16; --cream:#fdf6e9; --card:#fffaf0;
+    --orange:#e08a2e; --orange-d:#c2701a; --line:#e6d8bf; --ink:#3a2c1c;
+    --green:#3f8f4f; --red:#c0392b; --soft:#fff3df; --blue:#2c6cb0; --ice:#3b8fb5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    background:var(--cream); color:var(--ink);
+    display:flex; flex-direction:column; min-height:100dvh;
+  }
+  ruby rt{ font-size:.55em; color:#b08a4a; font-weight:400; user-select:none; }
+  body.fOff rt{ display:none; }
+  /* 翻訳（英語／インドネシア語）— 日本語の上にふりがな風に表示 */
+  .gl{ display:block; font-size:.8em; color:#1d7a8c; font-weight:600; line-height:1.45; margin-bottom:3px; }
+  .infoblock .gl, .check .gl{ color:#15616d; }
+  header{
+    background:linear-gradient(135deg,var(--brown),var(--brown-d));
+    color:#fff; padding:12px 16px; display:flex; align-items:center; gap:11px;
+    box-shadow:0 2px 8px rgba(0,0,0,.2); flex-shrink:0; position:sticky; top:0; z-index:10;
+  }
+  .logo{width:42px;height:42px;border-radius:50%;background:var(--cream);
+    display:flex;align-items:center;justify-content:center;font-size:23px;flex-shrink:0;}
+  header .ttl{font-size:17px;font-weight:800;}
+  header .sub{font-size:11px;opacity:.85;margin-top:2px;}
+  header .spacer{flex:1;}
+  .hbtn{background:rgba(255,255,255,.16);border:none;color:#fff;font-size:12.5px;font-weight:700;
+    padding:8px 12px;border-radius:18px;cursor:pointer;white-space:nowrap;}
+  .hbtn.on{background:#fff;color:var(--brown-d);}
+  .hbtn.home{display:none;}
+  .hbtn.home.show{display:block;}
+  main{flex:1;padding:22px 16px 32px;max-width:720px;margin:0 auto;width:100%;}
+  .lead{font-size:21px;font-weight:800;color:var(--brown-d);text-align:center;margin-bottom:6px;}
+  .lead-sub{font-size:14.5px;color:#7a6850;text-align:center;margin-bottom:22px;line-height:1.7;}
+  .bigbtns{display:flex;flex-direction:column;gap:14px;}
+  .bigbtn{background:var(--card);border:2.5px solid var(--orange);border-radius:18px;
+    padding:20px 18px;cursor:pointer;display:flex;align-items:center;gap:16px;
+    box-shadow:0 2px 6px rgba(0,0,0,.06);transition:transform .05s;}
+  .bigbtn:active{transform:scale(.98);background:var(--soft);}
+  .bigbtn .ic{font-size:38px;flex-shrink:0;width:54px;text-align:center;}
+  .bigbtn .bt{font-size:19px;font-weight:800;color:var(--brown-d);}
+  .bigbtn .bd{font-size:12.5px;color:#8a7458;margin-top:3px;}
+  /* カテゴリ・作業ボタン */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .taskbtn{background:var(--card);border:2px solid var(--line);border-radius:16px;
+    padding:16px 10px;cursor:pointer;text-align:center;
+    box-shadow:0 2px 5px rgba(0,0,0,.05);transition:transform .05s;}
+  .taskbtn:active{transform:scale(.97);}
+  .taskbtn .ic{font-size:34px;}
+  .taskbtn .nm{font-size:14px;font-weight:800;color:var(--brown-d);margin-top:7px;line-height:1.35;}
+  .taskbtn .wr{font-size:10.5px;color:#a08763;margin-top:4px;}
+  .taskbtn.frozen{border-color:var(--ice);background:#eef8fc;}
+  .catbtn{background:var(--card);border:2px solid var(--orange);border-radius:16px;
+    padding:16px 14px;cursor:pointer;display:flex;align-items:center;gap:13px;margin-bottom:11px;
+    box-shadow:0 2px 5px rgba(0,0,0,.05);transition:transform .05s;}
+  .catbtn:active{transform:scale(.98);background:var(--soft);}
+  .catbtn.frozen{border-color:var(--ice);background:#eef8fc;}
+  .catbtn .ic{font-size:32px;width:46px;text-align:center;flex-shrink:0;}
+  .catbtn .ct{font-size:17px;font-weight:800;color:var(--brown-d);}
+  .catbtn .cd{font-size:12px;color:#8a7458;margin-top:2px;}
+  .catbtn .cn{font-size:11px;color:#b09a78;margin-top:2px;}
+  /* ステップカード（新人・タイミー用）*/
+  .progress{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .progress .bar{flex:1;height:10px;background:var(--line);border-radius:5px;overflow:hidden;}
+  .progress .fill{height:100%;background:var(--orange);border-radius:5px;transition:width .25s;}
+  .progress .txt{font-size:13px;font-weight:800;color:var(--orange-d);white-space:nowrap;}
+  .stepcard{background:var(--card);border:2px solid var(--line);border-radius:20px;
+    padding:24px 20px;box-shadow:0 3px 10px rgba(0,0,0,.07);min-height:240px;}
+  .stepcard .badge{display:inline-block;background:var(--orange);color:#fff;font-size:14px;font-weight:800;
+    padding:6px 16px;border-radius:16px;margin-bottom:14px;}
+  .stepcard .badge.intro{background:var(--brown);}
+  .stepcard .badge.done{background:var(--green);}
+  .stepcard .stitle{font-size:20px;font-weight:800;color:var(--brown-d);margin-bottom:10px;line-height:1.5;}
+  .stepcard .sbody{font-size:18px;line-height:1.9;white-space:pre-wrap;}
+  .infoblock{margin-top:14px;padding:13px 15px;border-radius:13px;font-size:15px;line-height:1.8;}
+  .infoblock.tool{background:#eef6ff;border:1.5px solid #bcd9f5;}
+  .infoblock.caution{background:#fff3f1;border:1.5px solid #f3c6bf;}
+  .infoblock.danger{background:#fde8e6;border:2px solid var(--red);}
+  .infoblock .h{font-weight:800;display:block;margin-bottom:4px;}
+  .infoblock.tool .h{color:var(--blue);}
+  .infoblock.caution .h{color:var(--red);}
+  .infoblock.danger .h{color:var(--red);}
+  .check{background:#fffbe6;border:1.5px solid #f0e0a8;border-radius:13px;
+    padding:12px 15px;font-size:14px;line-height:1.8;margin-top:14px;color:#8a6d1a;}
+  .nav{display:flex;gap:12px;margin-top:18px;}
+  .nav button{flex:1;padding:17px 10px;border-radius:16px;font-size:17px;font-weight:800;
+    cursor:pointer;border:none;font-family:inherit;}
+  .nav .prev{background:#ece1cc;color:var(--brown-d);}
+  .nav .prev:disabled{opacity:.4;}
+  .nav .next{background:var(--orange);color:#fff;flex:2;}
+  .nav .next:active,.nav .prev:active{transform:scale(.98);}
+  .nav .finish{background:var(--green);color:#fff;flex:2;}
+  .backrow{margin-top:16px;text-align:center;}
+  .backrow button{background:none;border:none;color:var(--orange-d);font-size:14px;font-weight:700;
+    cursor:pointer;text-decoration:underline;padding:8px;}
+  /* 全手順一覧（中堅・ベテラン用）*/
+  .listcard{background:var(--card);border:2px solid var(--line);border-radius:18px;
+    padding:20px 18px;box-shadow:0 3px 10px rgba(0,0,0,.06);margin-bottom:14px;}
+  .listcard h2{font-size:20px;color:var(--brown-d);margin-bottom:4px;}
+  .listcard .meta{font-size:12px;color:#a08763;margin-bottom:12px;}
+  .listcard ol{margin:8px 0 0 22px;font-size:16px;line-height:1.95;}
+  .listcard ul.plain{margin:8px 0 0 20px;font-size:15.5px;line-height:1.9;}
+  .listcard li{margin-bottom:5px;}
+  .needchk{color:var(--red);font-weight:700;font-size:.9em;}
+  /* 印刷 */
+  .printlink{display:flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;margin-top:14px;background:#fff;border:2px dashed var(--orange);
+    color:var(--orange-d);border-radius:14px;padding:14px;font-size:15px;font-weight:800;
+    cursor:pointer;font-family:inherit;}
+  .printlink:active{background:var(--soft);}
+  .pbar{display:flex;gap:10px;margin-bottom:18px;}
+  .pbtn{flex:1;background:var(--orange);color:#fff;border:none;border-radius:14px;
+    padding:14px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;}
+  .pbtn.back{background:#ece1cc;color:var(--brown-d);flex:0 0 auto;padding:14px 20px;}
+  .printview .ptitle{font-size:22px;color:var(--brown-d);text-align:center;margin-bottom:4px;font-weight:800;}
+  .printview .psub{font-size:12px;color:#9a8a6a;text-align:center;margin-bottom:16px;}
+  .signrow{font-size:12px;color:#7a6850;border:1px dashed #c9b994;border-radius:8px;
+    padding:8px 11px;margin-bottom:14px;}
+  .ptask{background:var(--card);border:1.5px solid var(--line);border-radius:12px;
+    padding:16px 18px;margin-bottom:14px;}
+  .ptask h2{font-size:17px;color:var(--brown-d);margin-bottom:3px;}
+  .ptask .pmeta{font-size:12px;color:#9a8a6a;margin-bottom:8px;}
+  .ptask .pinfo{font-size:13px;background:#f6efe0;border-radius:8px;padding:8px 11px;margin:6px 0;line-height:1.8;}
+  .ptask .psteps{margin:9px 0 0 22px;font-size:14px;line-height:2;}
+  @media print{
+    header,.hbtn,.noprint{display:none !important;}
+    body{background:#fff;}
+    main{max-width:none;padding:8px;}
+    .ptask{page-break-inside:avoid;border:1px solid #bbb;box-shadow:none;}
+  }
+  /* ご提案書 */
+  .pp-title{font-size:21px;font-weight:800;color:var(--brown-d);text-align:center;}
+  .pp-sub{font-size:12px;color:#8a7458;text-align:center;margin:5px 0 16px;}
+  .pp-intro{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.85;margin-bottom:18px;}
+  .pp-sec{margin-bottom:13px;}
+  .pp-h{background:var(--brown);color:#fff;font-weight:800;font-size:15px;padding:8px 14px;border-radius:10px 10px 0 0;}
+  .pp-c{background:var(--card);border:1.5px solid var(--line);border-top:none;border-radius:0 0 10px 10px;padding:13px 15px;font-size:13.5px;line-height:1.95;}
+  .pp-c b{color:var(--brown-d);}
+  .pp-pain{background:#fdf0ee;border:1px solid #efccc5;border-radius:8px;padding:8px 11px;margin:6px 0;font-size:13px;line-height:1.7;}
+  .pp-aim{background:#eef7ee;border:1px solid #c5e3c5;border-radius:8px;padding:8px 11px;margin:6px 0;font-size:13.5px;line-height:1.7;}
+  .pp-start{display:block;width:100%;margin:22px 0 6px;background:var(--orange);color:#fff;border:none;
+    border-radius:16px;padding:18px;font-size:17px;font-weight:800;cursor:pointer;font-family:inherit;}
+  .pp-start:active{background:var(--orange-d);}
+  .pp-note{font-size:11.5px;color:#8a7458;text-align:center;}
+  .toprop{display:block;width:100%;margin-top:14px;background:none;border:1.5px dashed var(--line);
+    color:#8a7458;border-radius:12px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  footer{text-align:center;font-size:11px;color:#a8987d;padding:14px;flex-shrink:0;}
+  @media(max-width:380px){ .grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🍜</div>
+  <div>
+    <div class="ttl">川田うどん<ruby>店<rt>てん</rt></ruby> お<ruby>仕事<rt>しごと</rt></ruby><ruby>研修<rt>けんしゅう</rt></ruby></div>
+    <div class="sub">ボタンを<ruby>押<rt>お</rt></ruby>して、やり<ruby>方<rt>かた</rt></ruby>を<ruby>覚<rt>おぼ</rt></ruby>えよう</div>
+  </div>
+  <div class="spacer"></div>
+  <button class="hbtn home" id="homebtn" onclick="goHome()">🏠 <ruby>最初<rt>さいしょ</rt></ruby></button>
+  <button class="hbtn" id="glossbtn" onclick="toggleGloss()">🌐 English</button>
+  <button class="hbtn on" id="furibtn" onclick="toggleFuri()">ふりがな ON</button>
+</header>
+
+<main id="app"></main>
+
+<footer>川田うどん店 業務マニュアル v2（出典：スタッフ手書きシート38枚 ／ 2026年5月）</footer>
+
+<script>
+/* =========================================================
+   川田うどん店 お仕事研修アプリ v2（ボタン式・AIなし・完全無料）
+   ・冷凍製品製造（福田さん専任）を独立カテゴリ化
+   ・入口UX：時間帯（開店前/営業中/閉店作業/冷凍製造/空き時間）→ 中分類 → 作業一覧＋印刷
+   ・出典: 2026年5月 スタッフ手書きプロセス分解シート38枚
+   ========================================================= */
+function R(k,y){ return '<ruby>'+k+'<rt>'+y+'</rt></ruby>'; }
+var CHK='<span class="needchk">〔要確認〕</span>';
+
+/* ---- 表記統一ルール（v2）----
+   ・手順は「〜する」で終える（一覧リストは「／」区切り可）
+   ・数値：温度 -40℃／時間 60分／重量 220g／容量 10cc（数字と単位の間にスペースなし）
+   ・同じ意味の語：作業（画面）／手順（ステップ）／清掃（そうじは清掃に統一）
+   ・丼もの（井ものは使わない）／団体用（用体用は使わない）
+   ・担当者名は画面に表示しない（データの writer は参照用に残す）
+   ・未確定は〔要確認〕、未記入担当は表示しない
+   ---- */
+
+/* ---- 業務データ（カテゴリ別）----
+   task: {id,name,ic,writer,tools,cautions[],steps[],danger?,type?('list')} */
+const CATS = [
+{
+ id:'frozen', ic:'🧊', name:R('冷凍','れいとう')+R('製品','せいひん')+R('製造','せいぞう'),
+ sub:'店舗営業とは別枠', note:'冷凍うどん等の製造。ほかの業務とは手順が分かれています。', frozen:true,
+ tasks:[
+  { id:'niku', name:R('肉','にく')+'うどんセット'+R('作','づく')+'り', ic:'🥩', writer:'福田さん',
+    tools:'容器、赤テープ、ラベラー',
+    cautions:['肉ねぎの向きに注意する','ふたはしっかり閉める／赤テープは裏側までしっかり止める','肉うどんのシール内容を確認！','折り返しが少ないので、手でおさえながら貼る','シールが商品と合っているか確認！'],
+    steps:[
+     '肉うどん用の容器を準備する',
+     '冷凍真空した肉うどんセットを入れる（袋の余った部分を折り返して入れる）',
+     'その横に、解凍した肉ねぎセットを入れる（袋の余った部分を折り返して入れる）',
+     'ふたを閉めて、3箇所を赤テープで止める',
+     '表（おもて）側に「おいしいお召し上がり方」シールを貼る',
+     '裏（底）側に、上は「原材料名」シール、下は「賞味期限」シールを貼る',
+     '保冷袋に入れる',
+     '入れ口を折り返して、赤テープで止める',
+     '袋の表に、肉うどん写真シールを貼る',
+     '袋の裏に「ありがとうございます」シール、左下に賞味期限ラベルを貼る',
+     '冷凍庫へ入れる'
+    ]},
+  { id:'nabe', name:R('鍋焼','なべやき')+'・'+R('牛鍋','ぎゅうなべ')+'うどん セット'+R('作','づく')+'り', ic:'🍲', writer:'福田さん',
+    tools:'容器、肉型、バット、ラップ、赤テープ、セロテープ、ラベラー、保冷袋、急速冷凍機、タイマー',
+    cautions:['冷凍は -40℃で30分くらい '+CHK,'肉ねぎ・にんじんはバラして用意しておく（26枚程度） '+CHK,'判読しづらい箇所は原本シート（S__20365338）で確認のうえ確定する '+CHK],
+    steps:[
+     '急速冷凍機を立ち上げる（洗剤の水をふく・電源ON）',
+     'カットした肉ねぎを解凍させる（約3分ひたす）→ いったん水切り '+CHK,
+     '肉型を300g量で出す → バットに入れてラップ → 冷蔵庫へ '+CHK,
+     'うどん容器を冷蔵庫から出す',
+     '容器に鍋焼（牛鍋）を入れ、肉ねぎセットを横に入れる',
+     '具材（肉・水菜・中央にねぎ）を入れる '+CHK,
+     'ふたをして、自冷凍庫で冷凍 → 急速冷凍機前で60分スタート '+CHK,
+     'うどん分が全部できたらタイマーセット',
+     '冷凍が終わったら、余った部分をたたんでセロテープで止める',
+     '表（おもて）側の下に「おいしいお召し上がり方」シールを貼る',
+     '裏（底）側に、上は「原材料名」シール、下は「賞味期限」シールを貼る',
+     '保冷袋に入れる',
+     '余った部分をたたんで赤テープで止める',
+     '袋の表に「鍋焼の写真」シール・「ありがとうございます」シール、下に賞味期限ラベルを貼る',
+     '冷凍庫へ入れる'
+    ]},
+  { id:'tamago', name:'おでんの'+R('玉子','たまご')+'（'+R('冷凍','れいとう')+'）', ic:'🥚', writer:'福田さん',
+    tools:'スチコン機、天板、ミトン、台車、大きい鍋、ボール',
+    cautions:['スチームスイッチを確認！','1天板に約30個・4天板入る（最大150個）','大きいバットに全部入れて台車で運ぶと楽'],
+    steps:[
+     '朝、何個取るか（作るか）を考えてもらう',
+     'スチコン横のスチームで予熱 ON',
+     '天板に卵を入れ、スチコンに入れる '+CHK,
+     '個数に応じてスタート（18〜22分）',
+     '終了後、急速冷凍機で蒸らし30分 '+CHK,
+     '台車でおでん鍋へ運ぶ '+CHK,
+     '丸ごと大きいボールに入れて水につける'
+    ]},
+  { id:'guzai', name:R('冷凍','れいとう')+' '+R('鍋焼','なべやき')+'・'+R('牛鍋','ぎゅうなべ')+' '+R('具材','ぐざい')+R('作','づく')+'り', ic:'🧊', writer:'福田さん',
+    tools:'寸胴鍋、計量カップ（大・小）、大きい鍋、ざる、天板、青い型、ニトリル手袋、急速冷凍機、タイマー、タッパー、マスキングテープ',
+    cautions:['ふたを開け、具が入らないようざるを置く '+CHK,'少しあふれても良くない','出汁を床にこぼしたら足で踏まず拭く','棚下に天板が入らないので注意','タイマー横に「肉ねぎ」と貼っておくとわかりやすい','鍋焼・牛鍋 両方つくる'],
+    steps:[
+     '急速冷凍機前の水をふく → 予冷スタート',
+     '寸胴鍋に白だし＋調味料＋みりんを入れる',
+     '火にかけ、煮詰まり具合を見て火加減を調整する '+CHK,
+     '天板に出汁用の青い型を1枚置く',
+     '計量カップで出汁を流し入れる',
+     '横から見て水平に入っているか確認し、はみ出た所はそぐ '+CHK,
+     '急速冷凍機前の棚に天板を置く → 扉を開け天板を入れ、冷却スタート。これを繰り返す',
+     '全部入れたら、タイマー90分スタート',
+     '終了後、冷凍の固まり具合を確認（足りなければもう1回入れる）',
+     '型から出してタッパーに入れる',
+     'タッパー外にマスキングテープで日付を書く'
+    ]},
+  { id:'toriniku', name:'とり'+R('肉','にく')+'・'+R('牛肉','ぎゅうにく')+'（'+R('冷凍','れいとう')+'）', ic:'🍗', writer:'福田さん',
+    tools:'青い天板、肉型、計量カップ、ニトリル手袋、急速冷凍機、タイマー、タッパー、マスキングテープ',
+    cautions:['1天板に5枚出す '+CHK,'脂身がはみ出ているものは大きさをそろえてバラす '+CHK,'タイマー横に「とり」「牛」と表示しておく'],
+    steps:[
+     '在庫と販売量を見て、とり肉・牛肉をもらう',
+     '天板に肉型を入れる',
+     'とり肉：1個 30g＋煮汁10cc＋塩5cc '+CHK,
+     '牛肉：1個 25g＋煮汁10cc＋塩5cc '+CHK,
+     '冷凍機前の棚に置き、急速冷凍 90分スタート',
+     '終了後、冷凍具合を確認（足りなければもう1度入れる）',
+     '型から出してタッパーに入れ、日付・氏名を記入'
+    ]},
+  { id:'nikuudon-dashi', name:R('肉','にく')+'うどん '+R('具材','ぐざい')+' '+R('出汁','だし')+'（'+R('冷凍','れいとう')+'）', ic:'🧊', writer:'福田さん',
+    tools:'青い天板、肉型、急速冷凍機、タイマー',
+    cautions:['出汁は90gくらい '+CHK,'1天板の長さ・並びをそろえる '+CHK,'すきまにペーパーをはさむ '+CHK],
+    steps:[
+     '青い天板に出汁用 200g を入れる '+CHK,
+     '天板に肉型を入れる',
+     'すきま（間）に入れ、90分スタート',
+     '終了後、容器のまま冷凍庫へ'
+    ]},
+  { id:'reito-udon', name:'うどん（'+R('冷凍','れいとう')+'）', ic:'🍜', writer:'福田さん',
+    tools:'計り、タイマー、天板',
+    cautions:['楽に出来上がるよう並べる '+CHK],
+    steps:[
+     'ゆでてもらったうどんを220g計量する',
+     '天板に並べる',
+     '冷凍 60分スタート'
+    ]},
+  { id:'reito-negi', name:'ねぎ（'+R('冷凍','れいとう')+'）', ic:'🌿', writer:'福田さん',
+    tools:'肉型、天板、真空機、急速冷凍機',
+    cautions:['5cm以内に切らないと、串と見分けがつかない '+CHK,'冷凍庫のカット肉ねぎを使う '+CHK],
+    steps:[
+     '真空機の準備をする（真空ガス 32℃に） '+CHK,
+     '冷凍機のカット肉ねぎを、隠れない程度に約30分ひたす '+CHK,
+     '肉型に 30g 量で入れ、天板に並べる',
+     '終わったら冷凍（ねぎ・牛肉と一緒に真空冷凍） '+CHK
+    ]},
+  { id:'ebi', name:'えび'+R('天','てん')+'（'+R('冷凍','れいとう')+'）', ic:'🍤', writer:'福田さん',
+    tools:'ボール、ざる、バット、天板、クッキングシート、ニトリル手袋、タイマー、タッパー、マスキングテープ',
+    cautions:['重ならないように！','1天板に30本くらい','タイマー横に「えび」表示'],
+    steps:[
+     '在庫の数を考えて作る数を決める',
+     '酸性水につける',
+     'からを剥いて、切り込みを入れる',
+     '揚げ物担当の人に揚げをもらう '+CHK,
+     '天板にクッキングシートを敷く',
+     'えび天を並べる',
+     '急速冷凍に入れる（60分スタート）',
+     '終了したらタッパーに入れ、日付記入'
+    ]},
+  { id:'kikai', name:R('機械','きかい')+R('洗浄','せんじょう'), ic:'🧽', writer:'福田さん',
+    tools:'洗剤',
+    cautions:['説明書を見ながら行う'],
+    steps:[
+     'スチコン：月1回、「洗浄作業」メニューで洗浄する',
+     '急速冷凍機：毎回「時短コース」。週1回は洗剤を入れて「標準コース」で洗う'
+    ]},
+  { id:'souji', name:R('作業室','さぎょうしつ')+'の'+R('清掃','せいそう'), ic:'✨', writer:'福田さん',
+    tools:'アルコールペーパー、脱臭テープ、フィルター、洗剤',
+    cautions:[],
+    steps:[
+     '毎回はじめ：作業台・機械・冷蔵庫のドアノブをアルコールで拭く',
+     '毎回終わりも同じように拭く（パッキン部分も拭く）',
+     '月1回：軸受けの除菌テープを換える',
+     '月2回：換気扇のフィルターを換える',
+     '急速冷凍機前の棚のシートを洗い、ラックにかけて乾かす'
+    ]},
+  { id:'shime', name:R('毎回','まいかい')+'の'+R('締','し')+'め'+R('作業','さぎょう'), ic:'🔚', writer:'福田さん',
+    tools:'ニトリル手袋、アルコールペーパー、洗剤',
+    cautions:['急速冷凍機の内部に食材が残らないか確認！！'],
+    steps:[
+     '食材ごとにニトリル手袋を替える／作業台を拭く',
+     '急速冷凍がすべて終了 → 洗剤を入れて洗浄運転ON',
+     '真空機 終了後、水抜き運転 → 主電源OFF → アルコール拭き'
+    ]}
+ ]
+},
+{
+ id:'factory', ic:'🏭', name:R('生地','きじ')+R('仕込','しこ')+'み（'+R('製麺','せいめん')+'・'+R('工場','こうじょう')+'）', sub:'開店前', note:'朝の立ち上げ・うどんの仕込み・練り。',
+ tasks:[
+  { id:'asa', name:R('朝','あさ')+'の'+R('立','た')+'ち'+R('上','あ')+'げ〜'+R('仕込','しこ')+'み', ic:'🌅', writer:'萱原さん',
+    tools:'鍵束、体温計、シート、ずんどう、20kgばかり、包丁、うどんシート、火ばし、2L計量カップ、スプーン',
+    cautions:['白だしの火をあげすぎない（ボヤ・火災に注意）','包丁の取り扱いに注意する','白だしのアクはこまめにとる','大釜は熱い湯でヤケドに注意する'],
+    steps:[
+     '【洗浄機の立ち上げ】倉庫・冷蔵庫・裏口の鍵を開ける／ガスの元栓を開ける／手洗い・うがい／体温計・チェックリストを記入／厨房・仕込み部屋の電気をつける',
+     '【あらうす（粗臼）踏み直し 4:40〜5:00】シートを開き、前日にあら踏みしている粉を踏み直す',
+     '【白だし点火・おでんだし 5:00〜】ずんどうのフタを開けてにぼし・コンブを入れる／おでんだしをコンロにのせて沸かす／フライヤー2か所のスイッチを入れる',
+     '【団子作り 5:05〜】20kgばかりで2.5kgずつ、包丁で3等分に切り分け、団子を作る',
+     '【座布団作り 6:20〜7:30】シートを投げ、6個の団子を並べて踏む。6個固めたら3段・3段に重ね、打ち粉をつけてもう一度踏んで座布団を作る',
+     '【白だし切り替え 6:30】火を弱火に切り替え。にぼし・コンブを火ばしで取り出す。ウルメ・サバ節をずんどうへ入れ、その都度アクをとる',
+     '【お米をしかける 6:40】お米のフタを開け、水槽に水をためてお米2升を洗う（2回洗い）。2L計量カップで3900mLの水を計り、お米をしかける',
+     '【フロア・おでんだし準備 6:45】おでんだしをフロア元へ運びワクに入れる。厨房内のおでんだしも専用ずんどうに移し替える',
+     '【お米のスイッチを入れる 7:00】※お客さんがお店のスイッチを入れるとお寿司の時間と間違えやすいので注意',
+     '【白だし かつお節投入 7:30】かつお節を入れて1分後、火を止める。またアクを取る',
+     '【白だし こす 7:50〜】',
+     '【朝休憩 8:00】',
+     '【麺切り 8:30〜】平日10時／土日は麺切りを終える '+CHK,
+     '【大釜のスイッチを入れる 8:40】立ち上げに約50分かかる',
+     '【湯せんのガス点火・麺をゆがく】 '+CHK,
+     '【大釜スイッチを入れる 9:30】麺ゆがき時間 約23分。後で熱さを確認',
+     '【ゆでうどん玉取り 9:55〜】',
+     '【10:00 お店開店】のれんを出す／オーダーを通す／丼もの・鍋もののオーダーを調理して盛り付ける',
+     '釜の薬味を作る／オーダー表を見てうどんを準備／かけだしを足す',
+     '【A】うどんをゆがき・釜あげ。あついうどんがないか確認して出していく',
+     '【B】うどんの玉取りをする（男性交代で休憩）。釜の中に入り、A・Bを繰り返す',
+     '夕方用の麺を作る／機械の清掃をする（麺伸ばし・麺切りの機械）',
+     '【混雑の場合】うどん（メンセン）を大釜でゆがき約23分後、ゆでうどんもさらしぬめりをとり、うどん玉取りをする',
+     '【午後うどんゆで 14:00〜】ゆでうどん玉がなくならないようにうどんをゆがく',
+     '【JA・グリンピア・朝一 14:30〜】ゆでうどんを取る '+CHK,
+     '【白だし残量確認 16:00〜】井だし・つけだしの残量を確認する',
+     '【井だし・つけだしを足す 16:30〜】',
+     '【オーダー確認して調理・盛り付け 17:00〜】',
+     '【最後の麺をゆがく 18:30〜】',
+     '【大釜を洗う 18:55〜】緑のタワシでぬめりをこすって洗う。中は熱い湯・水を出してさましながら汚れを落とす。ホースで中の水を出す',
+     '【大釜に水をためる】',
+     '【水槽2か所を洗う 19:20〜】',
+     '【湯せんを洗う 19:30〜】バケツの水3杯入れて湯せんをさましてから、周りの汚れを緑のタワシでこすり洗いする',
+     '【タオルで拭きとる 夜7:40】湯せん・水槽2か所・桶 周辺',
+     '【おでんだしを冷ます】水槽に氷水をためておでんだしを冷やす',
+     '【お米の準備（2升）／白だし用ずんどうに水をためる】',
+     '【床の掃除（厨房内）／冷蔵庫を拭く／冷蔵庫内におでんだしを片づける 夜8:00すぎ】'
+    ]},
+  { id:'neri', name:R('工場','こうじょう')+'の'+R('練','ね')+'り（'+R('練','ね')+'り'+R('機','き')+'）', ic:'⚠️', writer:'萱原さん', danger:true,
+    tools:'計り、大きいバケツ、ハンドル、ヘラ、コンテナ、黒袋',
+    cautions:['★自動運転中、絶対に手を入れない','粉まきに巻き込まれる。機械を止めてから手を入れて落とす（ヘラで）','乾燥しないよう黒袋で包み込む'],
+    steps:[
+     '計りのスイッチをON、ゼロ点設定する',
+     '練り機のフタを開けてゴミがないか確認する',
+     '小麦粉を計量し、練り機に投入する '+CHK,
+     '練り機のフタを閉めて、手動運転ボタンをワンタッチ → スタート。とまったらスイッチを止める '+CHK,
+     'お店用に塩・水のフタを開けて、しゃく・バケツを用意して塩水を作る。計りで計量する '+CHK,
+     '練り機のフタを開け、塩水を均一に補助具にセットする',
+     '自動運転スイッチを押す',
+     '塩水を投入する',
+     '塩水投入後、補助具を外す',
+     '練り機の運転（自動 約3〜5分／後送り 約190秒撹拌） '+CHK,
+     '低速混ぜになり粉がまとまった時、一度「ていしボタン」を押してフタを開ける',
+     '手で練り具合を確認して、固まりをヘラで落とす',
+     '機械のフタを閉じて、再び自動運転ボタンを押す',
+     '後送り運転 約190秒後、自動で止まる',
+     'フタを開けて、ロックバーを外しハンドルを左に回す',
+     'コンテナに黒袋を用意しておき、練り上がった生地を黒袋に入れて包む（乾燥しないよう包み込む）',
+     '2体練る場合、同様の手順を2回繰り返す',
+     '【塩度・分量・温度ルール】平日は2体ずつ 25kg×2回／土曜は 25kg×2回・20kg×1回。1体あたり小麦粉25kg→塩水11.6kg（20kgの時は9.5kg）。塩度の目安：外気温15℃以上→11度、20℃以上→12.0度。'+CHK+' 数値は萱原さん本人に確認して確定する'
+    ]},
+  { id:'nerisouji', name:R('練','ね')+'り'+R('機','き')+'の'+R('清掃','せいそう'), ic:'🧹', writer:'萱原さん',
+    tools:'ヘラ2種、エアーコンプレッサー、タオル、バケツ、モップ',
+    cautions:['約1時間かかる'],
+    steps:[
+     '大きく3つに分けて掃除をする',
+     '①ヘラ（2種）を2つ使い、粉の汚れを落とす',
+     '②エアーコンプレッサーで、スキマの粉を吹き出す',
+     '③水でぬらしたタオルをしぼって、汚れを拭きとる',
+     'バケツ・ヘラ・均一に流し込む補助具を水槽で洗う',
+     '床のそうじ・モップがけをして、そうじが終わる'
+    ]}
+ ]
+},
+{
+ id:'kitchen', ic:'🍣', name:R('営業中','えいぎょうちゅう')+'タスク（'+R('炊','た')+'き'+R('場','ば')+'）', sub:'寿司・天ぷら・肉炊き', note:'提供中の調理・仕込み',
+ tasks:[
+  { id:'kome', name:R('米','こめ')+'を'+R('炊','た')+'く', ic:'🍚', writer:'村上さん・恩田さん',
+    tools:'ボール、大ざる、計量カップ、炊飯器、ネット',
+    cautions:['ネットをきつく包むと米が思うように炊けない','ネットはふわっと包む'],
+    steps:[
+     '大ざるに一升枡ですりきりのお米を入れて、ボールで2回洗う（二升の時は2つ作る）',
+     '炊飯器にネットをして、お米を入れる',
+     '一升：水3200mL／二升：水3900mLを入れる '+CHK,
+     'ふわっとネットで包む',
+     '30分浸水させる',
+     'スイッチを入れる（1時間後に出す）'
+    ]},
+  { id:'sushizu', name:R('寿司酢','すしず')+'を'+R('作','つく')+'る', ic:'🍶', writer:'恩田さん',
+    tools:'鍋',
+    cautions:['中火でしっかりかける'],
+    steps:[
+     '鍋に入れて作る（1.2合分）：さとう240g／塩36g／味の素2g／お酢240cc '+CHK,
+     '材料を鍋に入れて温める（中火でしっかり）'
+    ]},
+  { id:'sushi', name:'お'+R('寿司','すし')+'（ちらし・いなり）', ic:'🍣', writer:'恩田さん・村上さん',
+    tools:'鍋、寿司ばんぼう（飯台）、ざる、卵焼きフライパン、油ひき、パック、計り、ボール、しゃもじ、まな板、包丁',
+    cautions:['ちらし：パック箱の端には盛りつけない／中央の紅生姜にも盛りつける／値段シールが客に見える向きにする','いなり：手袋を装着して作る／型に入れる時は水で濡らす（手にくっつかない・くずれない・大きさをそろえる）'],
+    steps:[
+     '【ちらし】お店のちらし用の器を6か所、洗浄機にかける',
+     '寿司具・いなり・きぬさやを冷蔵庫から出す。JAのお寿司12人分、お店のちらし6か所分のきぬさやを用意する',
+     '鍋にお湯を沸かして、ひとつまみの塩を入れ、きぬさやをサッとゆがく',
+     '卵焼き用のフライパンと油ひきを用意して、錦糸卵を作る（ちらし3箇所分・丼ものの卵焼き）',
+     'フライパンに油を油ひきでのばし、小さいボールに卵を割り入れて混ぜ、薄く流し込み、きつね色に焼けたら平皿に取る',
+     'きぬさやは枝を斜めに半分に切る。卵は焼いた枚数を重ねて3等分にし、細く切る',
+     '1.2合分の寿司酢を作る（→「寿司酢を作る」参照）',
+     '次の日のしいたけを水につける／炊飯ジャーを用意する',
+     '寿司ばんぼうを用意し、中を木で冷まし絞ったタオルで拭く。炊飯器のごはんを寿司ボールに1.2合（約2杯）大しゃもじで入れる。残りは炊飯ジャーへ',
+     'ごはんに寿司酢を足し、大しゃもじで切るように混ぜる。前日作った寿司具を入れ、全体に飛び散る様に混ぜる',
+     '【いなり】あげが残っていれば鍋で温める。新しいいなりは鍋とざるに白だし1000ccを入れ、皮をむいたいなりを煮る。煮立ったらざるに揚げ、出汁もざるの下にボールを置いて入れておく',
+     '手袋をして、いなりのあげを取り上げ、カツ2個分の酢飯を入れて握る（1回3つ盛り）、ごま・しょうがを乗せる '+CHK,
+     '【余ったいなり】数えて容器に入れる（個数ルール '+CHK+'）。紙に「月日・個数」を書いて貼り、冷凍庫へ',
+     '【JA用パック寿司】すしシールを貼ったパックを用意。寿司1.2合の場合12パック・1パック150gを6パックずつに入れ、錦糸卵をまんべんなく散らし、きぬさやを2枚添える。横ぶたで閉じ、値段シールを貼る '+CHK
+    ]},
+  { id:'tempura', name:R('天','てん')+'ぷらを'+R('揚','あ')+'げる', ic:'🍤', writer:'恩田さん',
+    tools:'トレー、ボール、トング、泡立て器',
+    cautions:[],
+    steps:[
+     'いも・かぼちゃ・まめ・なす・えび・ブロックえび・玉ねぎ・しいたけ・にんじん を種類別に用意する',
+     '天ぷら粉を水で（泡立て器で）泡立てる',
+     '揚げる'
+    ]},
+  { id:'reito', name:R('冷凍室','れいとうしつ')+'から'+R('肉','にく')+'・えびを'+R('出','だ')+'す', ic:'🧊', writer:'恩田さん',
+    tools:'かご、トレー',
+    cautions:['次の日の分を出す'],
+    steps:[
+     '牛肉・かしわ・伸ばしえび・ブロックえび を次の日の分として冷凍室から出す'
+    ]},
+  { id:'niku-taki', name:R('肉','にく')+'・'+R('牛丼','ぎゅうどん')+'・とり'+R('肉','にく')+'を'+R('炊','た')+'く', ic:'🥩', writer:'恩田さん',
+    tools:'大きい片手鍋、ざる、包丁、しゃもじ',
+    cautions:['分量は '+CHK+'（記入の数値を確認のうえ確定）'],
+    steps:[
+     '【肉を炊く 1kg】肉1kgに、さとう200g・みりん180cc・酒180cc・薄口しょうゆ150cc で炊く '+CHK,
+     '【牛丼 500g】糸こん1袋をざるに出して短く切り、鍋でゆがいてざるにあげる。肉500gをどんぶり300cc＋砂糖50gで味付けし、ゆがいた糸こんを入れて炊く',
+     '【とり肉 1kg】4〜6切れに切る。鍋に入れ、しょうが・さとう100g・どんぶりたれ800ccを入れて18分混ぜながら炊く '+CHK
+    ]}
+ ]
+},
+{
+ id:'open', ic:'🌅', name:R('開店前','かいてんまえ')+R('準備','じゅんび'), sub:'店内立ち上げ・ホール', note:'開店までに終える準備',
+ tasks:[
+  { id:'tachiage', name:R('店内','てんない')+'の'+R('立','た')+'ち'+R('上','あ')+'げ', ic:'🔆', writer:'小坂さん・栗永さん',
+    tools:'ハンディ、充電器',
+    cautions:[],
+    steps:[
+     '体温計って記入／身支度する／タイムカードを押す',
+     '店内の電気をつける（7個の電気とサンプルケースの電気）',
+     '有線電源を入れる',
+     'ハンディの準備（4・5個）：バッテリーを充電器から取り出しセットし、定位置に置く',
+     '通路の電気をつける',
+     '配膳ロボットの充電コードを抜いて「待機場所」へ移動させる',
+     '奥フロアのウォーターサーバーの電源を入れ、製氷のスイッチをONにする',
+     '奥フロアのエアコンと廊下のエアコンを入れる',
+     'カレンダーをめくる'
+    ]},
+  { id:'oden-ireru', name:'おでんを'+R('入','い')+'れる', ic:'🍢', writer:'栗永さん・小坂さん',
+    tools:'寸胴',
+    cautions:['おでんの種を入れてもまだ出汁が入るようなら、厨房からおでん出汁を取ってきてギリギリまで入れる','前日に冷蔵庫に小分けしてあるが、なければオープン前に何個か用意しておく'],
+    steps:[
+     'おでんウォーマーのスイッチを「3」にする',
+     'おでんの種（具材）を種類別にマスに入れる（卵・平天・ボール・糸こん・厚揚げ・こんにゃく等）',
+     'すじ肉はオープン20分前に後で入れる'
+    ]},
+  { id:'oden-miso', name:'おでんみその'+R('準備','じゅんび'), ic:'🥣', writer:'栗永さん',
+    tools:'トレー、スプーン、みそ用容器',
+    cautions:[],
+    steps:['冷蔵庫にある辛みそと甘みそを、みそ用専用トレーに入れて一緒に前に出す']},
+  { id:'reji', name:'レジの'+R('釣','つ')+'り'+R('銭','せん')+R('準備','じゅんび'), ic:'💴', writer:'栗永さん',
+    tools:'釣り銭バッグ、マグネットクリップ',
+    cautions:['準備金の額が合っているか確認してから、更新ボタンを押す'],
+    steps:[
+     '釣り銭バッグからレジにお釣りを入金する',
+     'レジ画面の更新ボタンを押して、レシートをマグネットクリップに止めてレジ横に保存しておく',
+     '釣り銭バッグはレジ下の棚に置く'
+    ]},
+  { id:'bgm', name:R('店内','てんない')+'BGM', ic:'🎵', writer:'栗永さん',
+    tools:'', cautions:[],
+    steps:['レジ下にあるBGMのスイッチを入れる']},
+  { id:'pitcher', name:'ピッチャーの'+R('準備','じゅんび'), ic:'🧊', writer:'栗永さん',
+    tools:'ピッチャー',
+    cautions:['前フロアの方に大きいピッチャーを配置すると効率が良い','特に人気のある席（14・17・13）には大きいピッチャーを置く'],
+    steps:[
+     'ピッチャーに、レジ後ろにある製氷機の氷を多めに入れる',
+     'ウォーターサーバーの水を入れる',
+     '各テーブルに1つずつ置いていく'
+    ]},
+  { id:'ondo', name:R('冷蔵庫','れいぞうこ')+'の'+R('温度','おんど')+'を'+R('記録','きろく'), ic:'🌡️', writer:'栗永さん',
+    tools:'ボールペン、記録用紙',
+    cautions:['みその冷蔵庫の温度は①と一緒に、冷凍鍋焼うどんの冷凍庫は②と一緒に書いて丸でかこむ'],
+    steps:['①②③④（ラムネの冷凍庫、冷凍鍋焼うどんの冷凍庫）の温度を記録用紙に記入する']},
+  { id:'shinbun', name:R('新聞','しんぶん')+'をクリップでとめる', ic:'📰', writer:'栗永さん',
+    tools:'クリップ',
+    cautions:['土日の競馬の紙面は捨てずに必ずセットする'],
+    steps:[
+     '四国・日経・スポーツ新聞の広告を外に、それぞれ2か所をクリップで留める',
+     'マガジンラックに3紙を並べて置く'
+    ]},
+  { id:'genkan', name:R('玄関','げんかん')+R('周','まわ')+'りの'+R('掃除','そうじ'), ic:'🧹', writer:'栗永さん・小坂さん',
+    tools:'ほうき、ホース、デッキブラシ、ちり取り',
+    cautions:['くもの巣・鳥のフンはほうきでからめ取り、水を流してデッキブラシでよくこする'],
+    steps:[
+     '玄関外のアプローチをほうきで掃く',
+     'ホースで散水して、デッキブラシでこする',
+     '駐車場を見渡してゴミやタバコの吸殻をちり取りとほうきで集めてまわる',
+     '自動販売機あたりのゴミも取り除く',
+     'アプローチに小さい雑草が生えていたら抜く'
+    ]},
+  { id:'ohiya', name:'お'+R('冷','ひや')+'・おしぼりの'+R('準備','じゅんび'), ic:'🥛', writer:'栗永さん',
+    tools:'お盆、ざる、オレンジのかご',
+    cautions:['お客さんがたくさん並んでいる場合は、オレンジのかごにお冷を多めに入れ、カートにかごとおしぼりをふたつごと積んでおく'],
+    steps:['オープン前に、お客さんの並び具合を見ながらお冷を入れ、おしぼりと一緒に用意しておく']},
+  { id:'annai', name:'お'+R('客','きゃく')+'さんの'+R('案内','あんない'), ic:'🙇', writer:'栗永さん・小坂さん',
+    tools:'カート、ハンディ',
+    cautions:['待っているお客さんの年齢層やグループの特徴により臨機応変に席へ案内する','空席ができたら順番が後先になる場合があるので、必ず不快な思いをしないよう丁寧に説明してから次のお客さんをとおす'],
+    steps:[
+     'オープンしたら、1人がお冷とおしぼりを配って、1人が注文をとく（2人体制の場合）',
+     '満席の場合は、次の方の人数だけ聞いて待ってもらうようにする'
+    ]},
+  { id:'gezen', name:R('下膳','げぜん'), ic:'🍽️', writer:'栗永さん',
+    tools:'カート、アルコール、タオル',
+    cautions:['満席で回転が悪い場合は、空いた食器を一言かけてから下げさせてもらう','同時に空いた場合は人数や特徴を確認し、優先順位をつけて下膳する'],
+    steps:[
+     '空いた席の食器をカートにのせて下げる',
+     'テーブルの上をアルコールをスプレーして拭く',
+     'ピッチャーの水が少なかったら補充しておく'
+    ]},
+  { id:'taoru', name:'タオルを'+R('干','ほ')+'す', ic:'🧺', writer:'栗永さん',
+    tools:'洗濯機、物干し',
+    cautions:['風の強い日や雨の日は倉庫に干す','洗濯機の中のクズ取りネットのクズを捨てる'],
+    steps:[
+     '洗濯機の中のタオルを干す',
+     'フロアに7枚（真っ白なタオル）、厨房に3枚（黒っぽいタオル）を用意する'
+    ]},
+  { id:'nabe-set', name:R('鍋','なべ')+'のセット', ic:'🍲', writer:'栗永さん・小坂さん',
+    tools:'コンロ、とり皿、尺、レモン入れ、中おぼん',
+    cautions:['冬場や天気が悪い日は鍋がよく出るので、多めにコンロを準備しておく'],
+    steps:['中おぼんにコンロ・とり皿・尺・レモン入れをセットしておく '+CHK]},
+  { id:'doniti', name:R('土日祝','どにちしゅく')+'の'+R('朝','あさ')+R('準備','じゅんび')+'（'+R('外','そと')+'そうじ）', ic:'🌤️', writer:'小坂さん',
+    tools:'ブラシ、ほうき',
+    cautions:[],
+    steps:[
+     '店内準備の前に外そうじをする',
+     '入口に水をまく／ブラシでこする／水切りする',
+     '外の駐車場のゴミひろい／洗濯物を干す／灰皿のそうじ（時々）',
+     'トイレの電気をつける／便座のスイッチを入れる／エアータオルの電源を入れる'
+    ]}
+ ]
+},
+{
+ id:'prep', ic:'🔪', name:R('次','つぎ')+'の'+R('日','ひ')+'の'+R('仕込','しこ')+'み', sub:'営業中〜閉店前', note:'翌日に向けた仕込み・カット',
+ tasks:[
+  { id:'lemon', name:'レモンを'+R('切','き')+'る', ic:'🍋', writer:'〇〇さん（氏名未記入）',
+    tools:'レモン、錦糸ボール、包丁', cautions:[],
+    steps:['ボールに錦糸状になるよう薄く切り、半分に切る（5〜10個）','切れたら前に出す']},
+  { id:'tama-cut', name:R('玉','たま')+'ねぎを'+R('切','き')+'る', ic:'🧅', writer:'〇〇さん（氏名未記入）',
+    tools:'包丁、ビニール袋、タオル', cautions:[],
+    steps:['芽が出ているまるごとを半分に切る。芽は分ける','たてに薄く切り、タオルで水分を切る','ビニール袋に入れてクリップでとめ、冷蔵庫に入れる']},
+  { id:'kamaboko', name:'かまぼこを'+R('切','き')+'る', ic:'🍥', writer:'〇〇さん（氏名未記入）',
+    tools:'包丁', cautions:['フィルムは透明で、はがし残りがないようよく確認する'],
+    steps:['かまぼこのフィルムをはがす','形を整え、薄く切る','切った個数を紙に書いて容器に入れておく '+CHK]},
+  { id:'mizuna', name:R('水菜','みずな')+'を'+R('切','き')+'る', ic:'🥬', writer:'〇〇さん（氏名未記入）',
+    tools:'ボール、ざる、包丁、タッパー', cautions:['生けている葉が悪くなるのでよく確認する','洗いはていねいに'],
+    steps:['ボールに水を入れ、流水で一菜ずつ洗う','きれいな葉だけ取り、水気を切ってざるに','根元を切ってボールで洗う','3cmほどに切って、水をひいたタッパーにならべて入れる','切った個数を貼っておき、前に出す']},
+  { id:'tsukemono', name:R('漬物','つけもの')+'を'+R('切','き')+'る・つける', ic:'🥒', writer:'池田さん・記入者氏名空欄',
+    tools:'ボール、まな板、タッパー、おぼん', cautions:['大きさや形が色々あるので切り方を考える'],
+    steps:['漬物の汁をボールに切り取って、まな板で2cmくらいに切る','タッパーに、たれを少し残して重ねる '+CHK,'（つける）おぼんに2袋ずつ準備して、開けて漬物をタッパーに入れる '+CHK]},
+  { id:'wakame', name:'わかめを'+R('切','き')+'る', ic:'🌿', writer:'〇〇さん（氏名未記入）',
+    tools:'ボール、ざる', cautions:['洗いが甘いと塩が残りすぎる','戻しすぎるととろけるので注意'],
+    steps:['ボールに水を入れて戻し、ぶよぶよになるまでにする','ざるで水気を切って、たてよこに切る','日付つきタッパーに入れる']},
+  { id:'miso', name:'みそ'+R('作','づく')+'り（'+R('甘','あま')+'・'+R('辛','から')+'）', ic:'🍯', writer:'池田さん・小坂さん',
+    tools:'鍋、入れ物', cautions:['焦げないようによく混ぜる '+CHK],
+    steps:['甘みそ：みそ・さとう・みりん・ゴマ '+CHK,'辛みそ：白みそ・さとう・みりん・かけだし '+CHK,'鍋に入れて火にかけ温める','入れ物に入れて冷ます']},
+  { id:'daikon-cup', name:R('大根','だいこん')+'カップ', ic:'🥢', writer:'池田さん・小坂さん',
+    tools:'フォーク、包丁、トレー容器', cautions:['天ぷら用は少し、ぶっかけはカップの3分の2'],
+    steps:['大根おろしをカップに入れる']},
+  { id:'negi', name:'ネギ'+R('根','ね')+R('切','ぎ')+'り・'+R('白髪','しらが')+'ねぎ', ic:'🌱', writer:'小坂さん・池田さん',
+    tools:'はさみ、キッチンペーパー、包丁', cautions:[],
+    steps:['細ねぎ：はさみで袋ごと根を切り、キッチンペーパーで汚れをふきとる','白髪ねぎ：小口切りにする']},
+  { id:'gyu-cut', name:R('肉','にく')+'ねぎ・'+R('牛肉','ぎゅうにく')+'・オリーブ'+R('牛','ぎゅう')+'を'+R('切','き')+'る', ic:'🥩', writer:'小坂さん',
+    tools:'包丁、ラップ', cautions:['牛肉のかたい所は捨てる'],
+    steps:['牛肉：緑の部分と白い部分に分けて切る。緑は全部バラす','牛肉は4等分に切り冷凍する','オリーブ牛：3等分に切り70gに計り、ラップで包み冷凍する']},
+  { id:'katsu', name:'カツのパン'+R('粉','こ')+R('付','づ')+'け・'+R('串','くし')+'カツ', ic:'🍢', writer:'小坂さん',
+    tools:'バッター液、パン粉、串', cautions:[],
+    steps:['塩こしょう・酒をふって、バッター液をつけてからパン粉をつける','玉ねぎ・かぼちゃ・さつまいも・しいたけ を串に刺し、冷凍する '+CHK]},
+  { id:'itokon', name:R('糸','いと')+'こん・おでん'+R('刺','さ')+'す', ic:'🍲', writer:'小坂さん・池田さん',
+    tools:'鍋、串', cautions:['糸こんはつながらないようにしっかり切る'],
+    steps:['おでんのこんにゃくは切ってゆがく／糸こんゆがく','おでん刺す：厚揚げ・糸こん・こんにゃくを刺す','釜たれ沸かす：鍋に釜たれを入れて沸かす（沸とうしないよう注意） '+CHK]},
+  { id:'list-kusu', name:R('仕込','しこ')+'みリスト（'+R('総合','そうごう')+'）', ic:'📋', writer:'楠原さん', type:'list',
+    tools:'', cautions:[],
+    steps:[
+     'おでんの冷蔵庫の確認／すじ肉をたく／こんにゃく・糸こん・角をゆでる／牛肉を炊く／かしわを炊く／次の日の牛肉・とり肉を出す／天ぷら用のちくわを出す／白髪ねぎを人参とまぜる／大葉の準備',
+     '肉ねぎを切る／肉ねぎ用の昔ねぎを切る／肉ねぎ用の人参を切る／きつねを炊く／次の日のおでんの準備（こんにゃく・糸こん・角）／団体用こんにゃくをゆでる／おでん用の玉子をむきカラをぬく／団体用厚あげを炊く／団体用こんにゃく・糸こん炊く／団体用のおでんの盛りつけ／つけもの用こんにゃくを炊く',
+     '天ぷらをあげる／JA用ちくわを切る／寿司を作る／米を炊く／寿司具を炊く／次の日の寿司あげを出す／きつねを出す／開店前の薬味類の準備（畑ねぎ・わかめ・かまぼこ）／かしわをほぐす・肉を温める／釜だしをわかしポットに入れる／細ねぎを切る／かまぼこを切る／わかめを切る／アンパンマンジュースの補充／ゼリーの補充／レモンを切る／大根カップを作る／団体用わかめ・かまぼこを容器に入れる',
+     '団体用すき焼きの準備／えのき・しめじを人数分に分ける／れんこん・厚あげの準備／オリーブ牛の冷凍／割り下しを作る／わらびもちを入れる／かしわ用しょうがの小分け冷凍／うどん用しょうがの皮むき・残す／食器を洗浄・かたす／かけ出汁を作る／おでんの具を足す／カレーを作る／冷めたカレーを器に入れ冷蔵する／冷めた肉・かしわを冷蔵する／冷めたきつね・すし具を冷蔵する／水の切れた肉ねぎを袋に入れる／表面が乾いたかぼちゃ・さつまいもを袋に入れる／冷めたみそ（甘・辛）を冷蔵する／おにぎりを作る／冷めたこんぶを冷凍する／次の日の伸ばしのえびを出す／ブロックのえびを出す／JA用の野菜をタッパーに入れる／伝票を整理する／翌月の体調記入表などを作成する／電話対応する／固形燃料を補充する／おしぼりを補充する／タオルを洗う／おでんのこんぶ・出汁を炊く／木曜日の朝に使うこんにゃく類の準備（畑）／しょうゆ・酒・みりんを補充する／天紙を補充する／空いた寸胴を洗う'
+    ]},
+  { id:'list-blank', name:R('調理','ちょうり')+R('仕込','しこ')+'みリスト', ic:'📋', writer:'〇〇さん（氏名未記入）', type:'list',
+    tools:'', cautions:[],
+    steps:[
+     'かつを作る／唐揚げをする／えびをむく／白髪ねぎを切る／にんじんを作る（サラダ・かぼちゃかけなど）／きつねを炊く／じゃがいもを洗ってたく・蒸す／根切りをする（ねぎ）／しょうがを蒸す／キャベツを切る／山芋をすりおろす／蒸し鳥をたく・にんじんを切る／大根をすりおろす',
+     'サラダを作る／サラダ用人参をすりおろす／キャベツを切る／たくあんを切る／おでんみそ（甘・辛）を作る／カツを作り冷凍する／調理場で料理を作り出す／厨房でうどんをふる／レジをする／席へ案内する／水を持って行き注文を取る／配膳・運ぶ／食器を下げ・テーブルを拭く／返ってきた食器を洗い場に流す／薬味・割箸を補充する／プレハブで卵をボールに入れる／うずらの卵を容器に入れる／水菜を切る／大根をすりおろす／天ぷら用なす・しいたけ・人参を切る／魚の準備をする／牛肉を切る／オリーブ牛を計量して冷凍する／カレーの肉を計量して冷凍する／ポテトを補充する／いなり用あげを冷凍庫へ入れる／とり肉を箱から出し冷凍庫へ入れる／きつねを冷凍する／玉ねぎの皮をむく／玉ねぎをスライスする／丼用ねぎを切る／つけものを二つ割りに作る／団体用つけものを作る／釜の薬味を作る／小たれ・大たれを作る／梅干を容器に移す／白髪ねぎを切る'
+    ]}
+ ]
+},
+{
+ id:'close', ic:'🧹', name:R('閉店','へいてん')+R('作業','さぎょう'), sub:'閉店後の片付け', note:'清掃・締め・翌日準備',
+ tasks:[
+  { id:'toilet', name:R('夜','よる')+'のトイレ'+R('清掃','せいそう'), ic:'🚽', writer:'池田さん',
+    tools:'ほうき、ホース、デッキブラシ、水切りワイパー、モップ、ハイター、アルコール、ハンドタオル、ペーパータオル',
+    cautions:[],
+    steps:[
+     '店入り口のタオルをほうきではき、ホースで水をかけて汚れはデッキブラシでこする → 水切りワイパーではく → 駐車場のゴミをほうきでとりながら見回る',
+     '洗濯機の中のタオルを4枚フロア用に、にぶいタオルを2枚お店用に用意する。汚れたタオルを物干しに干す',
+     '外に干してあるタオルとモップ（トイレ用）をハイター・水で薄めてつける',
+     'エプロンをはずし、ビールサーバーをこする／洗面台をスポンジでみがく／蛇口をみがき足をふく／便器をみがき、便座にアルコールをつける／トイレットペーパーは三角折りにする',
+     'モップで床をふく／棚・便器・くもの巣・洗面台・蛇口・床・鏡などをアルコールスプレーでタオルでふく／ジェットタオルを拭きとり、各トイレにハンドタオルをつける／ハンドソープ・アルコールを補充する／従業員用トイレも同じく清掃する／ペーパータオルを補充する'
+    ]},
+  { id:'list-close', name:R('閉店','へいてん')+R('作業','さぎょう')+'リスト', ic:'📋', writer:'楠原さん', type:'list',
+    tools:'', cautions:[],
+    steps:[
+     'おでんを抜き冷まし冷蔵庫へ入れる／ビールサーバーを清掃する／水サーバーの水を抜き拭く／おでん鍋から器具を抜き洗う／カートをアルコールで拭く／お茶サーバーを清掃する／冷蔵庫の温度を記入する／のれんをおろす／自動ドアのカギをしめる／ゴミ箱のゴミを集めて捨てる／割箸を箱に入れる／トイレの電源を落とす／ジェットタオルの電源を切る／トイレの洗面台を洗う／手洗い・せっけんを補充する'
+    ]},
+  { id:'nextday-prep', name:R('翌日','よくじつ')+R('準備','じゅんび')+'リスト', ic:'📅', writer:'楠原さん', type:'list',
+    tools:'', cautions:[],
+    steps:[
+     '細ねぎの根切りをする／肉ねぎをさばく／冷凍されたきつねを日付順に移動し残りを確認する／みりんのラベルをはがす／アンパンマンジュースのビニールをはがす／翌日のこんぶを冷凍庫から出す／翌日のしょうがを冷凍庫から出す／おみやげ用の紙袋・ビール袋を補充する／肉ねぎを切る機械の刃を研ぐ／ピーク後、天ぷらのかすをとり洗い新聞を敷く／営業中、材料が足りるか途中で確認する／JA用じゃがいもをゆでて皮をむく／JA用のごぼうを炊く'
+    ]}
+ ]
+},
+{
+ id:'cook', ic:'🍲', name:R('営業中','えいぎょうちゅう')+'タスク（'+R('夕方','ゆうがた')+'〜'+R('夜','よる')+'）', sub:'調理・盛付け・清掃', note:'ピーク後の厨房作業',
+ tasks:[
+  { id:'chouri', name:R('調理','ちょうり')+'（'+R('鍋','なべ')+'・丼もの'+R('盛付','もりつ')+'け）', ic:'🍜', writer:'〇〇さん',
+    tools:'しゃもじ、トング、ステンレスフォーク '+CHK,
+    cautions:['詳細はシート（S__20365323）の判読が難しい箇所あり '+CHK],
+    steps:[
+     '鍋うどんセット仕込み：かしわ・もちを入れる／肉を入れる／肉ねぎを入れる／水菜を入れる／薬味',
+     '寿司・天ぷらの盛付け '+CHK,
+     '11:00〜 1時間 調理'
+    ]},
+  { id:'konro-zen', name:'コンロ'+R('清掃','せいそう')+'（'+R('全側','ぜんがわ')+'）', ic:'🔥', writer:'〇〇さん',
+    tools:'タワシ', cautions:['人の協力が必要な工程あり'],
+    steps:['2:00〜（10分・複数人）','コンロ・水槽の鉄板をはずして洗う','水槽に水をためる','鉄板を洗剤で洗って流す','コンロの下を拭く','コンロの上の鉄板をもとに戻す']},
+  { id:'konro-ura', name:'コンロ'+R('清掃','せいそう')+'（'+R('裏側','うらがわ')+'）', ic:'🔥', writer:'〇〇さん',
+    tools:'タワシ、洗剤', cautions:['人の協力が不可欠'],
+    steps:['2:30〜（10分・複数人）','コンロの上のつめと鉄板をぬく','水槽に水をためる','空いたコンロを洗剤でこすり、ふきとる','コンロの上の鉄板を洗う','つめと鉄板をもとに戻す','全部できるまで上記を繰り返す','コンロの下の鉄板をぬいて洗い、もどす']},
+  { id:'teppan', name:R('釜','かま')+'と'+R('水槽','すいそう')+'の'+R('間','あいだ')+'の'+R('鉄板','てっぱん')+'を'+R('洗','あら')+'う', ic:'🍳', writer:'〇〇さん',
+    tools:'タワシ', cautions:['人の協力が不可欠です'],
+    steps:['鉄板からタワシをはずす','鉄板をはずす','洗剤で鉄板を洗う','水で流す','もとに戻す','釜側のコンロの下の鉄板も同様に（人に協力してもらって）洗い、もどす']},
+  { id:'fryer', name:'フライヤー'+R('周','まわ')+'りの'+R('清掃','せいそう')+'・'+R('明日','あす')+'の'+R('準備','じゅんび'), ic:'🍤', writer:'〇〇さん',
+    tools:'新聞紙、タオル、おぼん、バット', cautions:['手があいてたら、まず先にできることはやっておく'],
+    steps:[
+     'フライヤー内部の鉄板・しほりを入れる／油受けを入れる',
+     '鉢板・水槽は新聞紙をしく','調理道具を新聞紙の上にのせる',
+     'はかりとすし用ボールを高めのテープに置く','黄色のコンテナを入口所におく '+CHK,
+     '大きいまな板の上におぼん3枚とバットを置く','タオルをかぶせる（油・まな板・赤いテーブルのコップ）',
+     'チェック（残量とたれた量）を書く','火を止める'
+    ]},
+  { id:'shouga', name:R('生姜','しょうが')+'の'+R('皮','かわ')+'むき・おろし／'+R('大根','だいこん')+'おろし'+R('機','き')+R('洗浄','せんじょう'), ic:'🫚', writer:'〇〇さん',
+    tools:'ピーラー、おろし機、ハイター、パック、袋', cautions:[],
+    steps:[
+     '【生姜の皮むき】（数人・2時間）生姜の皮をピーラーでむく（2か月分くらい）',
+     '【生姜おろし】（数人・1時間）おろし機をもってくる／生姜を生のままおろす／すって出た皮と芽を分け、捨てる／芽をパックに入れ袋につめる／おろし機を洗う',
+     '【大根おろし機洗う】（不定期・数人・20分）ハイターをかけて10分まつ／おろし機を回し残飯をつけて2回（両面）／洗剤で洗い流す／拭いてもとにもどす／土台を洗う／水を流す '+CHK
+    ]}
+ ]
+}
+];
+
+/* ===== 翻訳データ（英語 en ／ インドネシア語 id）=====
+   無いものは日本語のみ表示。task は 'カテゴリid.作業id' をキーにする。 */
+const TRANS = {
+ ui:{
+  en:{ whoAreYou:'Who are you?', pickOne:'Please tap one button below.',
+       newRole:'New staff', newDesc:'New here. Learn step by step.',
+       timeeRole:'Timee (spot worker)', timeeDesc:'Here just for today. Follow steps one by one.',
+       vetRole:'Experienced staff', vetDesc:'See all steps at once. Printing is available.',
+       printAll:'Print all steps on paper', whichJob:'Which job?',
+       backRole:'Choose your position again', vetHint:'Pick a task to see all steps',
+       newHint:'Pick a task to go step by step', beginning:'Start here', step:'Step', learnThis:'Let’s learn this task.',
+       tools:'Tools to use', cautionsLabel:'Be careful', dangerLabel:'DANGER! Always follow',
+       done:'Done', goodjob:'Great job!', prev:'Back', next:'Next', toLast:'To the end',
+       otherTask:'Choose another task', backMenu:'Back to task list', writtenBy:'Written by',
+       printThis:'Print this task (work sheet)', isList:'This is a task list. Step-by-step details will be added later.',
+       greetNew:'Welcome! First, choose the type of job.', greetTimee:'Thanks for today! Choose the job you will do.',
+       greetVet:'Thanks for your work! Choose the job to check.' },
+  id:{ whoAreYou:'Anda siapa?', pickOne:'Tekan satu tombol di bawah.',
+       newRole:'Staf baru', newDesc:'Baru di sini. Belajar langkah demi langkah.',
+       timeeRole:'Timee (pekerja harian)', timeeDesc:'Datang hanya hari ini. Ikuti langkah satu per satu.',
+       vetRole:'Staf berpengalaman', vetDesc:'Lihat semua langkah sekaligus. Bisa dicetak.',
+       printAll:'Cetak semua langkah di kertas', whichJob:'Pekerjaan yang mana?',
+       backRole:'Pilih posisi Anda lagi', vetHint:'Pilih tugas untuk melihat semua langkah',
+       newHint:'Pilih tugas untuk maju selangkah demi selangkah', beginning:'Mulai di sini', step:'Langkah', learnThis:'Mari pelajari tugas ini.',
+       tools:'Alat yang dipakai', cautionsLabel:'Hati-hati', dangerLabel:'BAHAYA! Wajib dipatuhi',
+       done:'Selesai', goodjob:'Kerja bagus!', prev:'Kembali', next:'Berikutnya', toLast:'Ke akhir',
+       otherTask:'Pilih tugas lain', backMenu:'Kembali ke daftar tugas', writtenBy:'Ditulis oleh',
+       printThis:'Cetak tugas ini (lembar kerja)', isList:'Ini daftar tugas. Langkah rincinya ditambahkan nanti.',
+       greetNew:'Selamat datang! Pilih jenis pekerjaan dulu.', greetTimee:'Terima kasih hari ini! Pilih pekerjaan Anda.',
+       greetVet:'Terima kasih atas kerjanya! Pilih pekerjaan untuk dicek.' }
+ },
+ cat:{
+  frozen:{ en:{name:'Frozen Product Making', sub:'Separate from store service', note:'Making frozen udon etc. Different workflow from the shop floor.'},
+           id:{name:'Pembuatan Produk Beku', sub:'Terpisah dari layanan toko', note:'Udon beku dll. Alur kerja berbeda dari dapur toko.'} },
+  factory:{ en:{name:'Dough prep (noodle factory)', sub:'Before opening', note:'Morning start-up, udon prep, dough mixing.'},
+            id:{name:'Persiapan adonan (pabrik mie)', sub:'Sebelum buka', note:'Persiapan pagi, udon, pengadukan adonan.'} },
+  kitchen:{ en:{name:'During service (cooking station)', sub:'Sushi, tempura, simmered meat'},
+            id:{name:'Saat layanan (dapur masak)', sub:'Sushi, tempura, daging rebus'} },
+  open:{ en:{name:'Pre-opening prep', sub:'In-store & hall', note:'Finish before opening.'},
+         id:{name:'Persiapan sebelum buka', sub:'Toko & ruang makan', note:'Selesai sebelum buka.'} },
+  prep:{ en:{name:'Next-day prep', sub:'During service to close', note:'Prep and cutting for tomorrow.'},
+         id:{name:'Persiapan hari berikutnya', sub:'Saat layanan–tutup', note:'Persiapan untuk besok.'} },
+  close:{ en:{name:'Closing tasks', sub:'After closing', note:'Cleaning, closing, next-day prep.'},
+          id:{name:'Tugas tutup', sub:'Setelah tutup', note:'Bersih-bersih dan persiapan besok.'} },
+  cook:{ en:{name:'During service (evening–night)', sub:'Cooking, plating, cleaning'},
+         id:{name:'Saat layanan (sore–malam)', sub:'Masak, penyajian, bersih-bersih'} }
+ },
+ task:{
+  'frozen.niku':{
+    en:{name:'Making Niku-udon (beef udon) sets', tools:'Container, red tape, label maker',
+      cautions:['Mind the direction of the beef & green onion','Close the lid firmly / fix red tape down to the back','Check the niku-udon sticker contents!','The fold-over is small, so press with your hand while sticking','Check that the sticker matches the product!'],
+      steps:['Prepare the niku-udon container','Put in the vacuum-frozen niku-udon set (fold the extra bag part and insert)','Next to it, put the thawed beef & green onion set (fold the extra bag part)','Close the lid and fix with red tape in 3 places','On the front (top), stick the “How to enjoy” sticker','On the back (bottom): “Ingredients” sticker on top, “Best-before date” below','Put it in a cooler bag','Fold the opening and fix with red tape','On the front of the bag, stick the niku-udon photo sticker','On the back, stick the “Thank you” sticker and the best-before label at lower left','Put it in the freezer']},
+    id:{name:'Membuat set Niku-udon (udon daging sapi)', tools:'Wadah, selotip merah, mesin label',
+      cautions:['Perhatikan arah daging & daun bawang','Tutup rapat / rekatkan selotip merah sampai ke belakang','Periksa isi stiker niku-udon!','Lipatannya sedikit, tekan dengan tangan saat menempel','Pastikan stiker sesuai produk!'],
+      steps:['Siapkan wadah niku-udon','Masukkan set niku-udon beku vakum (lipat bagian kantong yang lebih lalu masukkan)','Di sebelahnya, masukkan set daging & daun bawang yang sudah dicairkan (lipat bagian lebihnya)','Tutup dan rekatkan selotip merah di 3 tempat','Di sisi depan (atas), tempel stiker “Cara menikmati”','Di sisi belakang (bawah): stiker “Bahan” di atas, “Tanggal kedaluwarsa” di bawah','Masukkan ke kantong pendingin','Lipat mulut kantong dan rekatkan selotip merah','Di depan kantong, tempel stiker foto niku-udon','Di belakang, tempel stiker “Terima kasih” dan label kedaluwarsa di kiri bawah','Masukkan ke freezer']}
+  },
+  'frozen.nabe':{
+    en:{name:'Making Nabeyaki / Gyu-nabe udon sets (frozen)', tools:'Container, meat mold, tray (bat), wrap, red tape, cellophane tape, label maker, cooler bag, blast freezer, timer',
+      cautions:['Freeze at about -40℃ for around 30 min (to confirm)','Prepare beef & green onion and carrots separated (about 26 pieces) (to confirm)','For unclear parts, confirm with the original sheet (S__20365338)'],
+      steps:['Start up the blast freezer (wipe detergent water, power ON)','Thaw the cut beef & green onion (soak about 3 min) → drain (to confirm)','Take out 300g of meat mold → put in a tray, wrap → into the fridge (to confirm)','Take the udon container out of the fridge','Put nabeyaki (gyu-nabe) in the container, beef & onion set beside it','Add ingredients (meat, mizuna, green onion in the center) (to confirm)','Put the lid on, freeze in the self-freezer → 60 min at the blast freezer (to confirm)','When all the udon portions are done, set the timer','When freezing is done, fold the extra part and fix with cellophane tape','On the front (top), stick the “How to enjoy” sticker','On the back (bottom): “Ingredients” on top, “Best-before date” below','Put in a cooler bag','Fold the extra part and fix with red tape','On the bag front, stick the nabeyaki photo & “Thank you” stickers, best-before label below','Put it in the freezer']},
+    id:{name:'Membuat set udon Nabeyaki / Gyu-nabe (beku)', tools:'Wadah, cetakan daging, loyang, plastik wrap, selotip merah, selotip bening, mesin label, kantong pendingin, freezer cepat, timer',
+      cautions:['Bekukan sekitar -40℃ selama ±30 menit (perlu dicek)','Siapkan daging & daun bawang dan wortel terpisah (±26 lembar) (perlu dicek)','Untuk bagian yang tidak jelas, cek dengan lembar asli (S__20365338)'],
+      steps:['Hidupkan freezer cepat (lap air deterjen, power ON)','Cairkan daging & daun bawang potong (rendam ±3 menit) → tiriskan (perlu dicek)','Keluarkan cetakan daging 300g → taruh di loyang, wrap → masukkan kulkas (perlu dicek)','Keluarkan wadah udon dari kulkas','Masukkan nabeyaki (gyu-nabe) ke wadah, set daging & bawang di sampingnya','Tambahkan isi (daging, mizuna, daun bawang di tengah) (perlu dicek)','Tutup, bekukan di freezer sendiri → 60 menit di freezer cepat (perlu dicek)','Jika semua porsi udon selesai, set timer','Setelah beku, lipat bagian lebih dan rekatkan selotip bening','Di depan (atas), tempel stiker “Cara menikmati”','Di belakang (bawah): “Bahan” di atas, “Tanggal kedaluwarsa” di bawah','Masukkan ke kantong pendingin','Lipat bagian lebih dan rekatkan selotip merah','Di depan kantong, tempel stiker foto nabeyaki & “Terima kasih”, label kedaluwarsa di bawah','Masukkan ke freezer']}
+  },
+  'frozen.tamago':{
+    en:{name:'Oden eggs (frozen)', tools:'Steam-convection oven, tray, mitten, cart, large pot, bowl',
+      cautions:['Check the steam switch!','About 30 per tray, 4 trays fit (max 150)','Easier to put all in a big tray and carry by cart'],
+      steps:['In the morning, decide how many to take/make','Turn ON preheat with the steam beside the oven','Put eggs on the tray and into the oven (to confirm)','Start according to the number (18–22 min)','After finishing, rest in the blast freezer 30 min (to confirm)','Carry to the oden pot by cart (to confirm)','Put whole into a big bowl and soak in water']},
+    id:{name:'Telur oden (beku)', tools:'Oven steam-konveksi, loyang, sarung tangan, troli, panci besar, mangkuk',
+      cautions:['Periksa sakelar steam!','Sekitar 30 per loyang, muat 4 loyang (maks 150)','Lebih mudah taruh semua di loyang besar lalu bawa dengan troli'],
+      steps:['Pagi hari, tentukan berapa banyak diambil/dibuat','Nyalakan pemanasan awal dengan steam di samping oven','Taruh telur di loyang lalu masukkan ke oven (perlu dicek)','Mulai sesuai jumlahnya (18–22 menit)','Setelah selesai, diamkan di freezer cepat 30 menit (perlu dicek)','Bawa ke panci oden dengan troli (perlu dicek)','Masukkan utuh ke mangkuk besar dan rendam dalam air']}
+  },
+  'frozen.guzai':{
+    en:{name:'Frozen Nabeyaki / Gyu-nabe ingredient making', tools:'Stockpot, measuring cups (L/S), large pot, strainer, tray, blue mold, nitrile gloves, blast freezer, timer, container, masking tape',
+      cautions:['Open the lid and place a strainer so ingredients don’t fall in (to confirm)','A little overflow is not good','If broth spills on the floor, don’t step on it — wipe it','The tray doesn’t fit under the shelf, be careful','Labeling “beef & onion” beside the timer makes it easier to understand','Make both nabeyaki and gyu-nabe'],
+      steps:['Wipe water in front of the blast freezer → start pre-cooling','Put dashi + seasoning + mirin in the stockpot','Heat it and adjust the flame watching how it reduces (to confirm)','Place one blue broth mold on the tray','Pour the broth in with a measuring cup','Check from the side that it’s level; trim parts that stick out (to confirm)','Place the tray on the shelf in front of the blast freezer → open the door, put it in, start cooling. Repeat','When all are in, start the 90-min timer','After finishing, check how firmly frozen (if not enough, put back once more)','Take out of the mold and put into a container','Write the date on masking tape on the outside of the container']},
+    id:{name:'Membuat isi Nabeyaki / Gyu-nabe beku', tools:'Panci stok, gelas takar (besar/kecil), panci besar, saringan, loyang, cetakan biru, sarung tangan nitril, freezer cepat, timer, wadah, selotip masking',
+      cautions:['Buka tutup dan letakkan saringan agar isi tidak jatuh masuk (perlu dicek)','Sedikit meluap pun tidak baik','Kalau kuah tumpah ke lantai, jangan diinjak — dilap','Loyang tidak muat di bawah rak, hati-hati','Tempel tulisan “daging & bawang” di samping timer agar mudah dipahami','Buat keduanya: nabeyaki dan gyu-nabe'],
+      steps:['Lap air di depan freezer cepat → mulai pendinginan awal','Masukkan dashi + bumbu + mirin ke panci stok','Panaskan dan atur api sambil melihat penyusutannya (perlu dicek)','Letakkan satu cetakan biru kuah di loyang','Tuang kuah dengan gelas takar','Lihat dari samping apakah rata; pangkas bagian yang menonjol (perlu dicek)','Letakkan loyang di rak depan freezer cepat → buka pintu, masukkan, mulai pendinginan. Ulangi','Jika semua masuk, mulai timer 90 menit','Setelah selesai, cek tingkat kebekuannya (kalau kurang, masukkan sekali lagi)','Keluarkan dari cetakan, masukkan ke wadah','Tulis tanggal di selotip masking di luar wadah']}
+  },
+  'frozen.toriniku':{
+    en:{name:'Chicken & beef (frozen)', tools:'Blue tray, meat mold, measuring cup, nitrile gloves, blast freezer, timer, container, masking tape',
+      cautions:['Take out 5 per tray (to confirm)','For pieces with fat sticking out, trim to even size (to confirm)','Label “chicken” / “beef” beside the timer'],
+      steps:['Look at stock and sales, and get the chicken & beef','Put the meat mold on the tray','Chicken: 30g per piece + 10cc broth + 5cc salt (to confirm)','Beef: 25g per piece + 10cc broth + 5cc salt (to confirm)','Place on the shelf in front of the freezer, blast freeze 90 min','After finishing, check freeze level (if not enough, freeze once more)','Take out of mold, put in a container, write date & name']},
+    id:{name:'Daging ayam & sapi (beku)', tools:'Loyang biru, cetakan daging, gelas takar, sarung tangan nitril, freezer cepat, timer, wadah, selotip masking',
+      cautions:['Keluarkan 5 lembar per loyang (perlu dicek)','Yang lemaknya menonjol, rapikan agar ukurannya rata (perlu dicek)','Tempel “ayam” / “sapi” di samping timer'],
+      steps:['Lihat stok dan penjualan, lalu ambil ayam & sapi','Taruh cetakan daging di loyang','Ayam: 30g per potong + 10cc kuah + 5cc garam (perlu dicek)','Sapi: 25g per potong + 10cc kuah + 5cc garam (perlu dicek)','Taruh di rak depan freezer, bekukan cepat 90 menit','Setelah selesai, cek kebekuan (kalau kurang, bekukan sekali lagi)','Keluarkan dari cetakan, masukkan wadah, tulis tanggal & nama']}
+  },
+  'frozen.nikuudon-dashi':{
+    en:{name:'Niku-udon ingredient broth (frozen)', tools:'Blue tray, meat mold, blast freezer, timer',
+      cautions:['Broth is about 90g (to confirm)','Keep the length & arrangement on one tray even','Put paper in the gaps (to confirm)'],
+      steps:['Put 200g of broth on the blue tray (to confirm)','Put the meat mold on the tray','Put it in the gaps, start 90 min','After finishing, put into the freezer as is in the container']},
+    id:{name:'Kuah isi niku-udon (beku)', tools:'Loyang biru, cetakan daging, freezer cepat, timer',
+      cautions:['Kuah sekitar 90g (perlu dicek)','Jaga panjang & susunan dalam satu loyang tetap rata','Sisipkan kertas di sela-sela (perlu dicek)'],
+      steps:['Tuang 200g kuah ke loyang biru (perlu dicek)','Taruh cetakan daging di loyang','Masukkan di sela-sela, mulai 90 menit','Setelah selesai, masukkan ke freezer apa adanya dalam wadah']}
+  },
+  'frozen.reito-udon':{
+    en:{name:'Udon (frozen)', tools:'Scale, timer, tray',
+      cautions:['Arrange so it finishes neatly (to confirm)'],
+      steps:['Weigh 220g of the boiled udon','Arrange on the tray','Freeze, start 60 min']},
+    id:{name:'Udon (beku)', tools:'Timbangan, timer, loyang',
+      cautions:['Susun agar hasilnya rapi (perlu dicek)'],
+      steps:['Timbang 220g udon rebus','Susun di loyang','Bekukan, mulai 60 menit']}
+  },
+  'frozen.reito-negi':{
+    en:{name:'Green onion (frozen)', tools:'Meat mold, tray, vacuum machine, blast freezer',
+      cautions:['If not cut within 5cm, it can’t be told apart from skewers (to confirm)','Use the cut beef & green onion from the freezer (to confirm)'],
+      steps:['Prepare the vacuum machine (vacuum gas to 32℃) (to confirm)','Soak the cut beef & green onion from the freezer about 30 min so it’s just covered (to confirm)','Put 30g in the meat mold and arrange on the tray','When done, freeze (vacuum freeze together with green onion & beef) (to confirm)']},
+    id:{name:'Daun bawang (beku)', tools:'Cetakan daging, loyang, mesin vakum, freezer cepat',
+      cautions:['Kalau tidak dipotong dalam 5cm, sulit dibedakan dari tusukan (perlu dicek)','Pakai daging & daun bawang potong dari freezer (perlu dicek)'],
+      steps:['Siapkan mesin vakum (gas vakum ke 32℃) (perlu dicek)','Rendam daging & daun bawang potong dari freezer ±30 menit sampai terendam tipis (perlu dicek)','Masukkan 30g ke cetakan daging dan susun di loyang','Setelah selesai, bekukan (vakum-beku bersama daun bawang & sapi) (perlu dicek)']}
+  },
+  'frozen.ebi':{
+    en:{name:'Ebi-ten / shrimp tempura (frozen)', tools:'Bowl, strainer, tray (bat), tray, cooking sheet, nitrile gloves, timer, container, masking tape',
+      cautions:['Don’t let them overlap!','About 30 per tray','Label “shrimp” beside the timer'],
+      steps:['Decide how many to make based on stock','Soak in acidic water','Peel the shell and make a cut','Get the fried portion from the frying staff (to confirm)','Lay a cooking sheet on the tray','Arrange the shrimp tempura','Put into blast freeze (start 60 min)','When done, put in a container and write the date']},
+    id:{name:'Ebi-ten / tempura udang (beku)', tools:'Mangkuk, saringan, loyang, cooking sheet, sarung tangan nitril, timer, wadah, selotip masking',
+      cautions:['Jangan sampai bertumpuk!','Sekitar 30 per loyang','Tempel “udang” di samping timer'],
+      steps:['Tentukan jumlah yang dibuat berdasarkan stok','Rendam di air asam','Kupas kulit dan beri torehan','Minta bagian gorengan dari staf penggorengan (perlu dicek)','Alas cooking sheet di loyang','Susun ebi-ten','Masukkan ke freezer cepat (mulai 60 menit)','Setelah selesai, masukkan wadah dan tulis tanggal']}
+  },
+  'frozen.kikai':{
+    en:{name:'Machine cleaning (steam oven / blast freezer)', tools:'Detergent',
+      cautions:['Do it while reading the manual'],
+      steps:['Steam oven: once a month, clean with the “cleaning” menu','Blast freezer: every time on the “quick course”. Once a week add detergent and use the “standard course”']},
+    id:{name:'Pembersihan mesin (oven steam / freezer cepat)', tools:'Deterjen',
+      cautions:['Lakukan sambil membaca buku panduan'],
+      steps:['Oven steam: sebulan sekali, bersihkan dengan menu “cleaning”','Freezer cepat: setiap kali dengan “quick course”. Seminggu sekali tambah deterjen dan pakai “standard course”']}
+  },
+  'frozen.souji':{
+    en:{name:'Cleaning the work room', tools:'Alcohol paper, deodorizing tape, filter, detergent',
+      cautions:[],
+      steps:['Every start: wipe the worktable, machines, and fridge door handles with alcohol','Wipe the same way at the end (also the gasket parts)','Once a month: change the bearing sterilizing tape','Twice a month: change the ventilation fan filter','Wash the sheet on the shelf in front of the blast freezer, hang on a rack to dry']},
+    id:{name:'Membersihkan ruang kerja', tools:'Tisu alkohol, selotip penghilang bau, filter, deterjen',
+      cautions:[],
+      steps:['Setiap awal: lap meja kerja, mesin, dan gagang pintu kulkas dengan alkohol','Lap dengan cara sama di akhir (termasuk bagian karet/gasket)','Sebulan sekali: ganti selotip steril pada bantalan','Dua kali sebulan: ganti filter kipas ventilasi','Cuci lembaran di rak depan freezer cepat, gantung di rak agar kering']}
+  },
+  'frozen.shime':{
+    en:{name:'Closing tasks (every time)', tools:'Nitrile gloves, alcohol paper, detergent',
+      cautions:['Check there is no food left inside the blast freezer!!'],
+      steps:['Change nitrile gloves per ingredient / wipe the worktable','When all blast freezing is done → add detergent and run the cleaning cycle ON','After the vacuum machine finishes, run drain mode → main power OFF → wipe with alcohol']},
+    id:{name:'Tugas penutup (setiap kali)', tools:'Sarung tangan nitril, tisu alkohol, deterjen',
+      cautions:['Pastikan tidak ada makanan tersisa di dalam freezer cepat!!'],
+      steps:['Ganti sarung tangan nitril per bahan / lap meja kerja','Saat semua pembekuan selesai → tambah deterjen dan jalankan siklus pembersihan ON','Setelah mesin vakum selesai, jalankan mode pembuangan air → matikan power utama → lap dengan alkohol']}
+  },
+  'factory.asa':{
+    en:{name:'Morning start-up to prep', tools:'Key ring, thermometer, sheet, stockpot (zundo), 20kg scale, knife, udon sheet, fire chopsticks, 2L measuring cup, spoon',
+      cautions:['Don’t raise the shirodashi flame too high (watch for fire)','Handle the knife carefully','Skim the shirodashi scum frequently','The big pot is hot — beware of burns'],
+      steps:['[Start up] Open the warehouse, fridge, back-door locks / open the gas main / wash hands & gargle / fill in thermometer & checklist / turn on the kitchen & prep-room lights','[Re-treading the rough flour 4:40-5:00] Open the sheet and re-tread the flour roughly trodden the day before','[Light shirodashi & oden broth 5:00-] Open the pot lid, add dried sardines & kelp / put oden broth on the stove and bring to a boil / turn on the two fryers','[Making dango 5:05-] With the 20kg scale, cut into 2.5kg portions in thirds with a knife and make dango','[Making zabuton 6:20-7:30] Throw the sheet, line up 6 dango and tread. After firming 6, stack 3+3, dust with flour and tread again to make zabuton','[Switch shirodashi 6:30] Lower to low heat. Remove sardines & kelp with fire chopsticks. Add urume & mackerel flakes to the pot, skimming scum each time','[Set the rice 6:40] Open the rice lid, fill the tank with water and wash 2 sho of rice (twice). Measure 3900mL with the 2L cup and set the rice','[Floor & oden broth prep 6:45] Carry oden broth to the floor and pour into the frame. Also transfer kitchen oden broth to the dedicated pot','[Turn on the rice switch 7:00] Note: customers may confuse it with the sushi timing if they flip the shop switch','[Add bonito flakes to shirodashi 7:30] Add flakes, stop the heat after 1 min, and skim scum again','[Strain shirodashi 7:50-]','[Morning break 8:00]','[Noodle cutting 8:30-] Weekdays 10:00 / finish noodle cutting on weekends (to confirm)','[Turn on the big pot 8:40] Takes about 50 min to heat up','[Light the water-bath gas & boil noodles] (to confirm)','[Turn on the big pot 9:30] Boiling time about 23 min. Check the heat later','[Take boiled udon balls 9:55-]','[10:00 Shop opens] Put out the noren / pass the orders / cook and plate the donburi & hotpot orders','Make the pot condiments / check the order sheet and prepare udon / add kake-dashi','[A] Boil & lift udon from the pot. Check for hot udon and serve','[B] Take the udon balls (men take turns to break). Get into the pot and repeat A & B','Make noodles for the evening / clean the machines (noodle roller & cutter)','[When busy] Boil udon (mensen) in the big pot ~23 min, then rinse off the slime and take the udon balls','[Afternoon udon boiling 14:00-] Boil udon so the boiled udon balls don’t run out','[JA, Greenpia, Asaichi 14:30-] Take boiled udon (to confirm)','[Check shirodashi level 16:00-] Check the remaining donburi-dashi & tsuke-dashi','[Add donburi-dashi & tsuke-dashi 16:30-]','[Check orders, cook & plate 17:00-]','[Boil the last noodles 18:30-]','[Wash the big pot 18:55-] Scrub the slime with the green scrubber. Run hot/cold water inside to cool and remove dirt. Drain water with the hose','[Fill the big pot with water]','[Wash the 2 tanks 19:20-]','[Wash the water bath 19:30-] Put 3 buckets of water to cool the bath, then scrub the surrounding dirt with the green scrubber','[Wipe with towel, 7:40pm] Around the water bath, 2 tanks, and tub','[Cool the oden broth] Fill the tank with ice water and cool the oden broth','[Prepare rice (2 sho) / fill the shirodashi pot with water]','[Clean the floor (kitchen) / wipe the fridge / store oden broth in the fridge, after 8:00pm]']},
+    id:{name:'Persiapan pagi hingga prep', tools:'Gantungan kunci, termometer, lembaran, timbangan 20kg, pisau, lembar udon, sumpit api, gelas takar 2L, sendok',
+      cautions:['Jangan besarkan api shirodashi terlalu tinggi (waspada kebakaran)','Tangani pisau dengan hati-hati','Buang busa shirodashi secara rutin','Panci besar panas — hati-hati luka bakar'],
+      steps:['[Mulai] Buka kunci gudang, kulkas, pintu belakang / buka keran gas utama / cuci tangan & kumur / isi termometer & checklist / nyalakan lampu dapur & ruang prep','[Injak ulang tepung kasar 4:40-5:00] Buka lembaran dan injak ulang tepung yang diinjak kasar kemarin','[Nyalakan shirodashi & kuah oden 5:00-] Buka tutup panci, masukkan ikan teri kering & kombu / taruh kuah oden di kompor dan didihkan / nyalakan 2 penggorengan','[Membuat dango 5:05-] Dengan timbangan 20kg, potong jadi porsi 2.5kg dibagi tiga dengan pisau dan buat dango','[Membuat zabuton 6:20-7:30] Lempar lembaran, jejer 6 dango dan injak. Setelah 6 padat, tumpuk 3+3, taburi tepung dan injak lagi jadi zabuton','[Ganti shirodashi 6:30] Kecilkan api. Angkat teri & kombu dengan sumpit api. Masukkan serpihan urume & makarel ke panci, buang busa tiap kali','[Siapkan nasi 6:40] Buka tutup beras, isi bak dengan air dan cuci 2 sho beras (2 kali). Takar 3900mL dengan gelas 2L dan siapkan beras','[Prep lantai & kuah oden 6:45] Bawa kuah oden ke lantai dan tuang ke bingkai. Pindahkan juga kuah oden dapur ke panci khusus','[Nyalakan sakelar beras 7:00] Catatan: pelanggan bisa salah dengan waktu sushi kalau menekan sakelar toko','[Masukkan serpihan bonito ke shirodashi 7:30] Masukkan serpihan, matikan api setelah 1 menit, buang busa lagi','[Saring shirodashi 7:50-]','[Istirahat pagi 8:00]','[Memotong mie 8:30-] Hari kerja 10:00 / akhir pekan selesaikan pemotongan mie (perlu dicek)','[Nyalakan panci besar 8:40] Butuh ±50 menit untuk panas','[Nyalakan gas penangas air & rebus mie] (perlu dicek)','[Nyalakan panci besar 9:30] Waktu rebus ±23 menit. Cek panasnya nanti','[Ambil bola udon rebus 9:55-]','[10:00 Toko buka] Pasang noren / proses pesanan / masak & sajikan pesanan donburi & hotpot','Buat bumbu panci / cek lembar pesanan dan siapkan udon / tambah kake-dashi','[A] Rebus & angkat udon dari panci. Cek udon panas dan sajikan','[B] Ambil bola udon (pria gantian istirahat). Masuk ke panci dan ulangi A & B','Buat mie untuk sore / bersihkan mesin (penggiling & pemotong mie)','[Saat ramai] Rebus udon (mensen) di panci besar ±23 menit, bilas lendirnya dan ambil bola udon','[Rebus udon sore 14:00-] Rebus udon agar bola udon rebus tidak habis','[JA, Greenpia, Asaichi 14:30-] Ambil udon rebus (perlu dicek)','[Cek sisa shirodashi 16:00-] Cek sisa donburi-dashi & tsuke-dashi','[Tambah donburi-dashi & tsuke-dashi 16:30-]','[Cek pesanan, masak & sajikan 17:00-]','[Rebus mie terakhir 18:30-]','[Cuci panci besar 18:55-] Gosok lendir dengan spons hijau. Alirkan air panas/dingin di dalam untuk mendinginkan & hilangkan kotoran. Buang air dengan selang','[Isi panci besar dengan air]','[Cuci 2 bak 19:20-]','[Cuci penangas air 19:30-] Tuang 3 ember air untuk mendinginkan, lalu gosok kotoran sekitar dengan spons hijau','[Lap dengan handuk, 19:40] Sekitar penangas air, 2 bak, dan ember','[Dinginkan kuah oden] Isi bak dengan air es dan dinginkan kuah oden','[Siapkan beras (2 sho) / isi panci shirodashi dengan air]','[Bersihkan lantai (dapur) / lap kulkas / simpan kuah oden di kulkas, setelah 20:00]']}
+  },
+  'factory.neri':{
+    en:{name:'Factory dough mixing (mixer) — DANGER', tools:'Scale, large bucket, handle, scraper, container, black bag',
+      cautions:['★Never put your hands in while it’s running automatically','You can get caught in the flour mixing. Stop the machine before reaching in (use the scraper)','Wrap in a black bag so it doesn’t dry out'],
+      steps:['Turn on the scale, set the zero point','Open the mixer lid and check there is no trash','Weigh the flour and add it to the mixer (to confirm)','Close the lid, one-touch the manual button → start. Stop the switch when it stops (to confirm)','Open the salt & water, prepare a scoop & bucket and make the salt water. Measure with the scale (to confirm)','Open the mixer lid and set the salt water evenly on the helper jig','Press the auto-run switch','Add the salt water','After adding salt water, remove the helper jig','Run the mixer (auto ~3-5 min / reverse ~190 sec mixing) (to confirm)','When it slows and the flour comes together, press “stop” once and open the lid','Check the kneading by hand and scrape down the lumps','Close the lid and press the auto-run button again','After ~190 sec of reverse run, it stops automatically','Open the lid, remove the lock bar and turn the handle left','Prepare a black bag in the container and wrap the finished dough (so it doesn’t dry)','If mixing 2 batches, repeat the same steps twice','[Salt level / amount / temperature rules] Weekdays 2 batches 25kg×2; Saturday 25kg×2 + 20kg×1. Per batch: 25kg flour → 11.6kg salt water (9.5kg for 20kg). Salt level guide: outside temp 15℃+ → 11 deg, 20℃+ → 12.0 deg. (to confirm) — confirm the numbers with Kayahara-san']},
+    id:{name:'Pengadukan adonan pabrik (mesin) — BAHAYA', tools:'Timbangan, ember besar, gagang, sodet, kontainer, kantong hitam',
+      cautions:['★Jangan pernah masukkan tangan saat berjalan otomatis','Bisa terjepit saat tepung diaduk. Hentikan mesin sebelum menjangkau (pakai sodet)','Bungkus dengan kantong hitam agar tidak kering'],
+      steps:['Nyalakan timbangan, set titik nol','Buka tutup mesin dan cek tidak ada sampah','Timbang tepung dan masukkan ke mesin (perlu dicek)','Tutup, tekan tombol manual sekali → mulai. Hentikan sakelar saat berhenti (perlu dicek)','Buka garam & air, siapkan gayung & ember dan buat air garam. Takar dengan timbangan (perlu dicek)','Buka tutup mesin dan pasang air garam merata di alat bantu','Tekan sakelar otomatis','Masukkan air garam','Setelah air garam masuk, lepas alat bantu','Jalankan mesin (otomatis ±3-5 menit / mundur ±190 detik) (perlu dicek)','Saat melambat dan tepung menyatu, tekan “stop” sekali dan buka tutup','Cek adonan dengan tangan dan keruk gumpalannya','Tutup dan tekan tombol otomatis lagi','Setelah ±190 detik putaran mundur, berhenti otomatis','Buka tutup, lepas batang pengunci dan putar gagang ke kiri','Siapkan kantong hitam di kontainer dan bungkus adonan jadi (agar tidak kering)','Jika 2 batch, ulangi langkah yang sama dua kali','[Aturan kadar garam / jumlah / suhu] Hari kerja 2 batch 25kg×2; Sabtu 25kg×2 + 20kg×1. Per batch: tepung 25kg → air garam 11.6kg (9.5kg untuk 20kg). Panduan kadar garam: suhu luar 15℃+ → 11, 20℃+ → 12.0. (perlu dicek) — pastikan angkanya dengan Kayahara-san']}
+  },
+  'factory.nerisouji':{
+    en:{name:'Cleaning the dough mixer', tools:'2 types of scraper, air compressor, towel, bucket, mop',
+      cautions:['Takes about 1 hour'],
+      steps:['Clean in 3 big parts','(1) Use 2 scrapers to remove the flour dirt','(2) Blow out the flour in the gaps with the air compressor','(3) Wipe off the dirt with a wrung wet towel','Wash the bucket, scraper, and the even-feeding helper jig in the sink','Clean the floor and mop, and the cleaning is done']},
+    id:{name:'Membersihkan mesin adonan', tools:'2 jenis sodet, kompresor udara, handuk, ember, pel',
+      cautions:['Butuh sekitar 1 jam'],
+      steps:['Bersihkan dalam 3 bagian besar','(1) Pakai 2 sodet untuk membersihkan kotoran tepung','(2) Tiup tepung di sela-sela dengan kompresor udara','(3) Lap kotoran dengan handuk basah yang diperas','Cuci ember, sodet, dan alat bantu pengumpan di wastafel','Bersihkan lantai dan pel, selesai']}
+  },
+  'kitchen.kome':{
+    en:{name:'Cooking rice', tools:'Bowl, large strainer, measuring cup, rice cooker, net',
+      cautions:['If you wrap the net tightly the rice won’t cook well','Wrap the net loosely'],
+      steps:['Put leveled rice into the large strainer with a 1-sho measure, wash twice with a bowl (for 2 sho, make two batches)','Set the net in the rice cooker and add the rice','1 sho: 3200mL water / 2 sho: 3900mL water (to confirm)','Wrap loosely with the net','Soak for 30 min','Turn on the switch (take it out after 1 hour)']},
+    id:{name:'Memasak nasi', tools:'Mangkuk, saringan besar, gelas takar, rice cooker, jaring',
+      cautions:['Kalau jaring dibungkus terlalu rapat nasi tidak matang baik','Bungkus jaring dengan longgar'],
+      steps:['Masukkan beras rata ke saringan besar pakai takaran 1-sho, cuci 2 kali dengan mangkuk (untuk 2 sho, buat dua kali)','Pasang jaring di rice cooker dan masukkan beras','1 sho: air 3200mL / 2 sho: air 3900mL (perlu dicek)','Bungkus longgar dengan jaring','Rendam 30 menit','Nyalakan sakelar (keluarkan setelah 1 jam)']}
+  },
+  'kitchen.sushizu':{
+    en:{name:'Making sushi vinegar', tools:'Pot',
+      cautions:['Heat firmly on medium'],
+      steps:['Make in a pot (for 1.2 go): sugar 240g / salt 36g / MSG 2g / vinegar 240cc (to confirm)','Put the ingredients in the pot and warm (firmly on medium)']},
+    id:{name:'Membuat cuka sushi', tools:'Panci',
+      cautions:['Panaskan dengan api sedang yang stabil'],
+      steps:['Buat di panci (untuk 1.2 go): gula 240g / garam 36g / MSG 2g / cuka 240cc (perlu dicek)','Masukkan bahan ke panci dan hangatkan (api sedang stabil)']}
+  },
+  'kitchen.sushi':{
+    en:{name:'Making sushi (chirashi & inari)', tools:'Pot, sushi tub (handai), strainer, omelet pan, oil wiper, pack, scale, bowl, rice paddle, cutting board, knife',
+      cautions:['Chirashi: don’t plate on the edges of the pack box / also plate on the center red ginger / face the price sticker toward the customer','Inari: wear gloves / wet the mold with water (so it doesn’t stick, crumble, and sizes match)'],
+      steps:['[Chirashi] Run the 6 chirashi bowls through the dishwasher','Take sushi toppings, inari, and snow peas from the fridge. Prepare snow peas for 12 JA sushi and 6 shop chirashi','Boil water in a pot, add a pinch of salt, and quickly blanch the snow peas','Prepare the omelet pan and oil wiper, make shredded egg (for 3 chirashi & donburi omelet)','Spread oil with the wiper, crack egg into a small bowl and mix, pour thin, and when golden move to a flat plate','Cut snow peas diagonally in half. Stack the cooked egg sheets, cut in thirds, then slice thin','Make 1.2 go of sushi vinegar (→ see “Making sushi vinegar”)','Soak the next day’s shiitake in water / prepare the rice jar','Prepare the sushi tub, cool the inside with wood and wipe with a wrung towel. Put 1.2 go (about 2 scoops) of cooker rice into the sushi bowl with the big paddle. Put the rest in the rice jar','Add sushi vinegar to the rice, mix with a cutting motion using the big paddle. Add the toppings made the day before and mix so it scatters evenly','[Inari] If pouches remain, warm in a pot. For new inari, put 1000cc shirodashi in a pot & strainer, simmer the peeled inari. When boiling, lift to the strainer, and keep the broth with a bowl under the strainer','Wear gloves, lift the inari pouch, put 2 katsu-worth of vinegared rice and shape (3 per round), top with sesame & ginger (to confirm)','[Leftover inari] Count and put in a container (count rule to confirm). Write “date & count” on paper, attach, and put in the freezer','[JA pack sushi] Prepare packs with the sushi sticker. For 1.2 go: 12 packs, 150g each, in 6-pack batches; scatter shredded egg evenly, add 2 snow peas. Close the side lid and put on the price sticker (to confirm)']},
+    id:{name:'Membuat sushi (chirashi & inari)', tools:'Panci, bak sushi (handai), saringan, wajan telur, pengoles minyak, pak, timbangan, mangkuk, centong, talenan, pisau',
+      cautions:['Chirashi: jangan menata di tepi kotak pak / tata juga di jahe merah tengah / hadapkan stiker harga ke pelanggan','Inari: pakai sarung tangan / basahi cetakan dengan air (agar tidak lengket, tidak hancur, ukuran sama)'],
+      steps:['[Chirashi] Cuci 6 mangkuk chirashi di mesin pencuci','Keluarkan topping sushi, inari, dan kacang kapri dari kulkas. Siapkan kacang kapri untuk 12 sushi JA dan 6 chirashi toko','Didihkan air di panci, beri sejumput garam, blansir kacang kapri sebentar','Siapkan wajan telur dan pengoles minyak, buat telur iris (untuk 3 chirashi & telur donburi)','Olesi minyak dengan pengoles, pecahkan telur ke mangkuk kecil dan aduk, tuang tipis, jika keemasan pindahkan ke piring datar','Potong kacang kapri serong jadi dua. Tumpuk lembaran telur matang, potong jadi tiga, lalu iris tipis','Buat 1.2 go cuka sushi (→ lihat “Membuat cuka sushi”)','Rendam shiitake untuk besok di air / siapkan toples nasi','Siapkan bak sushi, dinginkan bagian dalam dengan kayu dan lap dengan handuk peras. Masukkan 1.2 go (±2 centong) nasi ke mangkuk sushi dengan centong besar. Sisanya ke toples nasi','Tambahkan cuka sushi ke nasi, aduk dengan gerakan memotong pakai centong besar. Tambahkan topping yang dibuat kemarin dan aduk agar merata','[Inari] Jika ada sisa kantong, hangatkan di panci. Untuk inari baru, masukkan 1000cc shirodashi ke panci & saringan, rebus inari yang sudah dikupas. Saat mendidih, angkat ke saringan, simpan kuah dengan mangkuk di bawah saringan','Pakai sarung tangan, angkat kantong inari, isi nasi cuka sebanyak 2 katsu dan bentuk (3 per putaran), beri wijen & jahe (perlu dicek)','[Sisa inari] Hitung dan masukkan wadah (aturan jumlah perlu dicek). Tulis “tanggal & jumlah” di kertas, tempel, masukkan freezer','[Sushi pak JA] Siapkan pak dengan stiker sushi. Untuk 1.2 go: 12 pak, 150g tiap pak, per 6 pak; taburi telur iris merata, beri 2 kacang kapri. Tutup samping dan beri stiker harga (perlu dicek)']}
+  },
+  'kitchen.tempura':{
+    en:{name:'Frying tempura', tools:'Tray, bowl, tongs, whisk',
+      cautions:[],
+      steps:['Prepare potato, pumpkin, beans, eggplant, shrimp, block shrimp, onion, shiitake, carrot by type','Whisk tempura flour with water','Fry']},
+    id:{name:'Menggoreng tempura', tools:'Nampan, mangkuk, penjepit, pengocok',
+      cautions:[],
+      steps:['Siapkan kentang, labu, kacang, terong, udang, udang blok, bawang bombai, shiitake, wortel per jenis','Kocok tepung tempura dengan air','Goreng']}
+  },
+  'kitchen.reito':{
+    en:{name:'Take out meat & shrimp from the freezer', tools:'Basket, tray',
+      cautions:['Take out the next day’s portion'],
+      steps:['Take out beef, chicken, stretched shrimp, and block shrimp from the freezer as the next day’s portion']},
+    id:{name:'Keluarkan daging & udang dari freezer', tools:'Keranjang, nampan',
+      cautions:['Keluarkan porsi untuk besok'],
+      steps:['Keluarkan daging sapi, ayam, udang panjang, dan udang blok dari freezer sebagai porsi besok']}
+  },
+  'kitchen.niku-taki':{
+    en:{name:'Simmering meat / gyudon / chicken', tools:'Large saucepan, strainer, knife, paddle',
+      cautions:['Amounts to confirm (verify the written numbers)'],
+      steps:['[Simmer meat 1kg] For 1kg meat: sugar 200g, mirin 180cc, sake 180cc, light soy sauce 150cc (to confirm)','[Gyudon 500g] Empty 1 bag of konnyaku noodles into a strainer, cut short, blanch in a pot and drain. Season 500g meat with 300cc donburi + 50g sugar, add the blanched noodles and simmer','[Chicken 1kg] Cut into 4-6 pieces. Put in a pot with ginger, 100g sugar, 800cc donburi sauce, simmer 18 min while stirring (to confirm)']},
+    id:{name:'Merebus daging / gyudon / ayam', tools:'Panci besar, saringan, pisau, centong',
+      cautions:['Takaran perlu dicek (verifikasi angka yang ditulis)'],
+      steps:['[Rebus daging 1kg] Untuk 1kg daging: gula 200g, mirin 180cc, sake 180cc, kecap asin ringan 150cc (perlu dicek)','[Gyudon 500g] Tuang 1 kantong mie konnyaku ke saringan, potong pendek, blansir di panci dan tiriskan. Bumbui 500g daging dengan 300cc donburi + 50g gula, tambahkan mie blansir dan rebus','[Ayam 1kg] Potong jadi 4-6 bagian. Masukkan ke panci dengan jahe, gula 100g, saus donburi 800cc, rebus 18 menit sambil diaduk (perlu dicek)']}
+  },
+  'cook.chouri':{
+    en:{name:'Cooking (hotpot & donburi plating)', tools:'Rice paddle, tongs, stainless fork (to confirm)',
+      cautions:['Some parts of the sheet (S__20365323) are hard to read (to confirm)'],
+      steps:['Nabe-udon set prep: add chicken & mochi / add meat / add beef & green onion / add mizuna / condiments','Plating sushi & tempura (to confirm)','11:00- cooking for 1 hour']},
+    id:{name:'Memasak (penyajian hotpot & donburi)', tools:'Centong, penjepit, garpu stainless (perlu dicek)',
+      cautions:['Sebagian lembar (S__20365323) sulit dibaca (perlu dicek)'],
+      steps:['Prep set nabe-udon: tambah ayam & mochi / tambah daging / tambah daging & daun bawang / tambah mizuna / bumbu','Penyajian sushi & tempura (perlu dicek)','11:00- memasak selama 1 jam']}
+  },
+  'cook.konro-zen':{
+    en:{name:'Stove cleaning (all sides)', tools:'Scrubber',
+      cautions:['Some steps need another person’s help'],
+      steps:['2:00- (10 min, several people)','Remove and wash the iron plates of the stove & tank','Fill the tank with water','Wash the plates with detergent and rinse','Wipe under the stove','Put the top stove plate back']},
+    id:{name:'Membersihkan kompor (semua sisi)', tools:'Spons gosok',
+      cautions:['Beberapa langkah butuh bantuan orang lain'],
+      steps:['2:00- (10 menit, beberapa orang)','Lepas dan cuci pelat besi kompor & bak','Isi bak dengan air','Cuci pelat dengan deterjen dan bilas','Lap bagian bawah kompor','Pasang kembali pelat atas kompor']}
+  },
+  'cook.konro-ura':{
+    en:{name:'Stove cleaning (back side)', tools:'Scrubber, detergent',
+      cautions:['Another person’s help is essential'],
+      steps:['2:30- (10 min, several people)','Pull out the claw and plate on top of the stove','Fill the tank with water','Scrub the empty stove with detergent and wipe','Wash the top stove plate','Put the claw and plate back','Repeat the above until all are done','Pull out, wash, and put back the plate under the stove']},
+    id:{name:'Membersihkan kompor (sisi belakang)', tools:'Spons gosok, deterjen',
+      cautions:['Bantuan orang lain sangat penting'],
+      steps:['2:30- (10 menit, beberapa orang)','Tarik keluar cakar dan pelat di atas kompor','Isi bak dengan air','Gosok kompor kosong dengan deterjen dan lap','Cuci pelat atas kompor','Pasang kembali cakar dan pelat','Ulangi langkah di atas sampai semua selesai','Tarik, cuci, dan pasang kembali pelat di bawah kompor']}
+  },
+  'cook.teppan':{
+    en:{name:'Washing the plate between the pot and the tank', tools:'Scrubber',
+      cautions:['Another person’s help is essential'],
+      steps:['Remove the scrubber from the plate','Remove the plate','Wash the plate with detergent','Rinse with water','Put it back','Wash the plate under the pot-side stove the same way (with help) and put it back']},
+    id:{name:'Mencuci pelat antara panci dan bak', tools:'Spons gosok',
+      cautions:['Bantuan orang lain sangat penting'],
+      steps:['Lepas spons dari pelat','Lepas pelat','Cuci pelat dengan deterjen','Bilas dengan air','Pasang kembali','Cuci pelat di bawah kompor sisi panci dengan cara sama (dengan bantuan) dan pasang kembali']}
+  },
+  'cook.fryer':{
+    en:{name:'Fryer-area cleaning & next-day prep', tools:'Newspaper, towel, tray, bat',
+      cautions:['If you have free hands, do what you can first'],
+      steps:['Put in the fryer inner plate & strainer / put in the oil tray','Lay newspaper on the base plate & tank','Place the cooking tools on the newspaper','Put the scale and sushi bowl on the higher tape','Place the yellow container at the entrance (to confirm)','Put 3 trays and a bat on the big cutting board','Cover with a towel (oil, cutting board, red table cups)','Write the check (remaining & dripped amounts)','Turn off the fire']},
+    id:{name:'Membersihkan area penggorengan & prep besok', tools:'Koran, handuk, nampan, loyang',
+      cautions:['Jika tangan kosong, kerjakan yang bisa dulu'],
+      steps:['Pasang pelat dalam penggorengan & saringan / pasang nampan minyak','Alas koran di pelat dasar & bak','Letakkan alat masak di atas koran','Taruh timbangan dan mangkuk sushi di selotip yang lebih tinggi','Letakkan kontainer kuning di pintu masuk (perlu dicek)','Taruh 3 nampan dan loyang di talenan besar','Tutup dengan handuk (minyak, talenan, gelas meja merah)','Tulis pemeriksaan (sisa & jumlah yang menetes)','Matikan api']}
+  },
+  'cook.shouga':{
+    en:{name:'Peeling/grating ginger & washing the daikon grater', tools:'Peeler, grater, bleach, pack, bag',
+      cautions:[],
+      steps:['[Peeling ginger] (several people, 2 hrs) Peel ginger with a peeler (about 2 months’ worth)','[Grating ginger] (several people, 1 hr) Bring the grater / grate raw ginger / separate the skin & sprouts and discard / put sprouts in a pack & bag / wash the grater','[Washing the daikon grater] (irregular, several people, 20 min) Apply bleach and wait 10 min / run the grater with leftovers twice (both sides) / wash with detergent / wipe and put back / wash the base / drain water (to confirm)']},
+    id:{name:'Kupas/parut jahe & cuci parutan lobak', tools:'Pengupas, parutan, pemutih, pak, kantong',
+      cautions:[],
+      steps:['[Kupas jahe] (beberapa orang, 2 jam) Kupas jahe dengan pengupas (sekitar untuk 2 bulan)','[Parut jahe] (beberapa orang, 1 jam) Bawa parutan / parut jahe mentah / pisahkan kulit & tunas lalu buang / masukkan tunas ke pak & kantong / cuci parutan','[Cuci parutan lobak] (tidak rutin, beberapa orang, 20 menit) Beri pemutih dan tunggu 10 menit / putar parutan dengan sisa 2 kali (kedua sisi) / cuci dengan deterjen / lap dan pasang kembali / cuci dudukan / buang air (perlu dicek)']}
+  },
+  'close.toilet':{
+    en:{name:'Night toilet cleaning & closing cleanup', tools:'Broom, hose, deck brush, water-squeegee, mop, bleach, alcohol, hand towel, paper towel',
+      cautions:[],
+      steps:['Sweep the entrance towel with a broom, pour water with the hose and scrub dirt with the deck brush → squeegee → sweep the parking-lot trash while patrolling','Prepare 4 towels for the floor and 2 dull towels for the shop; hang dirty towels on the rack','Soak the towels and mop (for toilet) hanging outside in diluted bleach & water','Take off the apron, scrub the beer server / clean the sink with a sponge / polish the tap and wipe the legs / polish the toilet and apply alcohol to the seat / fold toilet paper into a triangle','Wipe the floor with a mop / wipe shelves, toilet, cobwebs, sink, tap, floor, mirror with alcohol spray & towel / wipe the jet towel and hang a hand towel in each toilet / refill hand soap & alcohol / clean the staff toilet too / refill paper towels']},
+    id:{name:'Pembersihan toilet malam & cleanup tutup', tools:'Sapu, selang, sikat dek, squeegee, pel, pemutih, alkohol, handuk tangan, tisu',
+      cautions:[],
+      steps:['Sapu handuk pintu masuk, siram air dengan selang dan gosok kotoran dengan sikat dek → squeegee → sapu sampah area parkir sambil berkeliling','Siapkan 4 handuk untuk lantai dan 2 handuk kusam untuk toko; gantung handuk kotor di rak','Rendam handuk dan pel (untuk toilet) yang digantung di luar dalam pemutih encer & air','Lepas celemek, gosok dispenser bir / bersihkan wastafel dengan spons / poles keran dan lap kakinya / poles toilet dan beri alkohol di dudukan / lipat tisu toilet jadi segitiga','Pel lantai / lap rak, toilet, sarang laba-laba, wastafel, keran, lantai, cermin dengan semprotan alkohol & handuk / lap jet towel dan gantung handuk tangan di tiap toilet / isi ulang sabun & alkohol / bersihkan toilet staf juga / isi ulang tisu']}
+  },
+  'close.list-close':{
+    en:{name:'Closing & cleaning list (Kusuhara-san)', tools:'',
+      cautions:[],
+      steps:['Drain & cool the oden into the fridge / clean the beer server / drain & wipe the water server / remove tools from the oden pot & wash / wipe the cart with alcohol / clean the tea server / record the fridge temperature / lower the noren / lock the auto door / collect & throw out trash / box the chopsticks / turn off the toilet power / turn off the jet towel / wash the toilet sink / refill hand soap','Trim spring-onion roots / handle the beef-onion / move frozen kitsune in date order & check stock / peel the mirin label / peel the Anpanman juice plastic / take kombu out of the freezer for the next day / take ginger out for the next day / refill souvenir paper bags & beer bags / sharpen the beef-onion cutter blade / after the peak, remove tempura crumbs, wash and lay newspaper / during business, check if ingredients are enough / boil & peel JA potatoes / simmer JA burdock']},
+    id:{name:'Daftar tutup & pembersihan (Kusuhara-san)', tools:'',
+      cautions:[],
+      steps:['Tiriskan & dinginkan oden ke kulkas / bersihkan dispenser bir / tiriskan & lap dispenser air / lepas alat dari panci oden & cuci / lap troli dengan alkohol / bersihkan dispenser teh / catat suhu kulkas / turunkan noren / kunci pintu otomatis / kumpulkan & buang sampah / masukkan sumpit ke kotak / matikan listrik toilet / matikan jet towel / cuci wastafel toilet / isi ulang sabun','Potong akar daun bawang / olah daging-bawang / pindahkan kitsune beku urut tanggal & cek stok / lepas label mirin / lepas plastik jus Anpanman / keluarkan kombu dari freezer untuk besok / keluarkan jahe untuk besok / isi ulang kantong kertas & kantong bir suvenir / asah pisau pemotong daging-bawang / setelah puncak, ambil remah tempura, cuci dan alasi koran / saat operasi, cek apakah bahan cukup / rebus & kupas kentang JA / rebus gobo JA']}
+  },
+  'open.tachiage':{
+    en:{name:'Store start-up', tools:'Handy terminal, charger',
+      cautions:[],
+      steps:['Take temperature & record / get ready / punch the time card','Turn on the store lights (7 lights and the sample case light)','Turn on the wired (BGM) power','Prepare handy terminals (4-5): take batteries from the charger, set them, place in position','Turn on the aisle lights','Unplug the serving robot’s charging cord and move it to the “standby spot”','Turn on the back-floor water server and turn the ice-maker switch ON','Turn on the back-floor and corridor air conditioners','Flip the calendar']},
+    id:{name:'Menyalakan toko', tools:'Terminal handy, charger',
+      cautions:[],
+      steps:['Ukur suhu & catat / siap-siap / cap kartu waktu','Nyalakan lampu toko (7 lampu dan lampu lemari sampel)','Nyalakan daya kabel (BGM)','Siapkan terminal handy (4-5): ambil baterai dari charger, pasang, taruh di posisi','Nyalakan lampu lorong','Cabut kabel charger robot pelayan dan pindahkan ke “tempat siaga”','Nyalakan dispenser air lantai belakang dan nyalakan sakelar pembuat es','Nyalakan AC lantai belakang dan koridor','Balik kalender']}
+  },
+  'open.oden-ireru':{
+    en:{name:'Putting in the oden', tools:'Stockpot',
+      cautions:['If broth still goes in after adding the oden, bring oden broth from the kitchen and fill to the limit','It’s portioned in the fridge the day before, but if not, prepare a few before opening'],
+      steps:['Set the oden warmer switch to “3”','Put the oden ingredients into the cells by type (egg, flat tempura, ball, konnyaku noodles, fried tofu, konnyaku, etc.)','Add the tendon (suji) meat later, 20 min before opening']},
+    id:{name:'Memasukkan oden', tools:'Panci stok',
+      cautions:['Jika kuah masih bisa masuk setelah oden ditambah, ambil kuah oden dari dapur dan isi sampai batas','Sudah dibagi di kulkas sehari sebelumnya, tapi jika tidak ada, siapkan beberapa sebelum buka'],
+      steps:['Atur sakelar penghangat oden ke “3”','Masukkan bahan oden ke sel per jenis (telur, tempura pipih, bola, mie konnyaku, tahu goreng, konnyaku, dll.)','Tambahkan daging suji belakangan, 20 menit sebelum buka']}
+  },
+  'open.oden-miso':{
+    en:{name:'Preparing oden miso', tools:'Tray, spoon, miso container',
+      cautions:[],
+      steps:['Put the spicy miso and sweet miso from the fridge into the dedicated miso tray and bring out together']},
+    id:{name:'Menyiapkan miso oden', tools:'Nampan, sendok, wadah miso',
+      cautions:[],
+      steps:['Masukkan miso pedas dan miso manis dari kulkas ke nampan miso khusus dan keluarkan bersama']}
+  },
+  'open.reji':{
+    en:{name:'Preparing register change', tools:'Change bag, magnet clip',
+      cautions:['Check the float amount is correct before pressing the update button'],
+      steps:['Deposit change from the change bag into the register','Press the update button on the register, clip the receipt with the magnet clip and keep it beside the register','Put the change bag on the shelf under the register']},
+    id:{name:'Menyiapkan uang kembalian kasir', tools:'Kantong kembalian, klip magnet',
+      cautions:['Pastikan jumlah modal benar sebelum menekan tombol update'],
+      steps:['Setor uang kembalian dari kantong ke kasir','Tekan tombol update di kasir, jepit struk dengan klip magnet dan simpan di samping kasir','Taruh kantong kembalian di rak bawah kasir']}
+  },
+  'open.bgm':{
+    en:{name:'Store BGM', tools:'',
+      cautions:[],
+      steps:['Turn on the BGM switch under the register']},
+    id:{name:'BGM toko', tools:'',
+      cautions:[],
+      steps:['Nyalakan sakelar BGM di bawah kasir']}
+  },
+  'open.pitcher':{
+    en:{name:'Preparing pitchers', tools:'Pitcher',
+      cautions:['Placing big pitchers on the front floor is more efficient','Especially put big pitchers on the popular seats (14, 17, 13)'],
+      steps:['Put plenty of ice from the ice maker behind the register into the pitcher','Add water from the water server','Place one on each table']},
+    id:{name:'Menyiapkan teko', tools:'Teko',
+      cautions:['Menaruh teko besar di lantai depan lebih efisien','Khususnya taruh teko besar di kursi populer (14, 17, 13)'],
+      steps:['Masukkan banyak es dari pembuat es di belakang kasir ke teko','Tambahkan air dari dispenser air','Taruh satu di tiap meja']}
+  },
+  'open.ondo':{
+    en:{name:'Recording fridge temperatures', tools:'Ballpoint pen, record sheet',
+      cautions:['Write the miso fridge temp together with ①, and the frozen nabeyaki udon freezer together with ②, circled'],
+      steps:['Record the temperatures of ①②③④ (ramune freezer, frozen nabeyaki udon freezer) on the record sheet']},
+    id:{name:'Mencatat suhu kulkas', tools:'Pulpen, lembar catatan',
+      cautions:['Tulis suhu kulkas miso bersama ①, dan freezer udon nabeyaki beku bersama ②, dilingkari'],
+      steps:['Catat suhu ①②③④ (freezer ramune, freezer udon nabeyaki beku) di lembar catatan']}
+  },
+  'open.shinbun':{
+    en:{name:'Clipping the newspapers', tools:'Clips',
+      cautions:['Don’t throw away the weekend horse-racing pages — always set them'],
+      steps:['Remove the ads from the Shikoku, Nikkei, and sports papers, and clip each in 2 places','Line up the 3 papers on the magazine rack']},
+    id:{name:'Menjepit koran', tools:'Klip',
+      cautions:['Jangan buang halaman pacuan kuda akhir pekan — selalu pasang'],
+      steps:['Lepas iklan dari koran Shikoku, Nikkei, dan olahraga, jepit masing-masing di 2 tempat','Jejer 3 koran di rak majalah']}
+  },
+  'open.genkan':{
+    en:{name:'Cleaning around the entrance', tools:'Broom, hose, deck brush, dustpan',
+      cautions:['Remove cobwebs & bird droppings with the broom, flush with water and scrub well with the deck brush'],
+      steps:['Sweep the outside approach with a broom','Sprinkle water with the hose and scrub with the deck brush','Look around the parking lot and gather trash & cigarette butts with the dustpan and broom','Also remove trash around the vending machine','Pull any small weeds growing on the approach']},
+    id:{name:'Membersihkan sekitar pintu masuk', tools:'Sapu, selang, sikat dek, pengki',
+      cautions:['Bersihkan sarang laba-laba & kotoran burung dengan sapu, siram air dan gosok dengan sikat dek'],
+      steps:['Sapu jalan masuk luar dengan sapu','Siram air dengan selang dan gosok dengan sikat dek','Lihat sekeliling area parkir dan kumpulkan sampah & puntung rokok dengan pengki dan sapu','Bersihkan juga sampah sekitar mesin penjual','Cabut rumput kecil yang tumbuh di jalan masuk']}
+  },
+  'open.ohiya':{
+    en:{name:'Preparing cold water & wet towels', tools:'Tray, strainer, orange basket',
+      cautions:['When many customers are lined up, put extra cold water in the orange basket and stack the basket & wet towels two-deep on the cart'],
+      steps:['Before opening, watch the line of customers, pour cold water and prepare it together with wet towels']},
+    id:{name:'Menyiapkan air dingin & handuk basah', tools:'Nampan, saringan, keranjang oranye',
+      cautions:['Saat banyak pelanggan antre, isi air dingin lebih banyak di keranjang oranye dan tumpuk keranjang & handuk basah dua lapis di troli'],
+      steps:['Sebelum buka, lihat antrean pelanggan, tuang air dingin dan siapkan bersama handuk basah']}
+  },
+  'open.annai':{
+    en:{name:'Guiding customers', tools:'Cart, handy terminal',
+      cautions:['Guide flexibly to seats depending on the age group and group features of waiting customers','When a seat opens the order may flip, so always explain politely so customers don’t feel uncomfortable before seating the next one'],
+      steps:['When open, one person hands out cold water & wet towels, one takes orders (2-person system)','If full, ask only the number of people of the next party and have them wait']},
+    id:{name:'Mengarahkan pelanggan', tools:'Troli, terminal handy',
+      cautions:['Arahkan ke kursi secara fleksibel sesuai kelompok usia & ciri rombongan pelanggan yang menunggu','Saat kursi kosong urutan bisa berubah, jadi selalu jelaskan dengan sopan agar pelanggan tidak tidak nyaman sebelum mendudukkan yang berikut'],
+      steps:['Saat buka, satu orang bagikan air dingin & handuk basah, satu ambil pesanan (sistem 2 orang)','Jika penuh, tanya jumlah orang rombongan berikutnya saja dan minta mereka menunggu']}
+  },
+  'open.gezen':{
+    en:{name:'Clearing tables', tools:'Cart, alcohol, towel',
+      cautions:['When full and turnover is slow, say a word before clearing the empty dishes','If seats open at once, check the number & features and clear by priority'],
+      steps:['Put the dishes from the empty seat on the cart and clear them','Spray alcohol on the table and wipe','If the pitcher water is low, refill it']},
+    id:{name:'Membersihkan meja', tools:'Troli, alkohol, handuk',
+      cautions:['Saat penuh dan perputaran lambat, beri sepatah kata sebelum mengangkat piring kosong','Jika beberapa kursi kosong sekaligus, cek jumlah & ciri lalu bersihkan sesuai prioritas'],
+      steps:['Taruh piring dari kursi kosong di troli dan angkat','Semprot alkohol di meja dan lap','Jika air teko sedikit, isi ulang']}
+  },
+  'open.taoru':{
+    en:{name:'Hanging towels', tools:'Washing machine, drying rack',
+      cautions:['On windy or rainy days, dry in the warehouse','Throw away the lint from the lint-catching net in the washing machine'],
+      steps:['Hang the towels from the washing machine','Prepare 7 (pure white towels) for the floor and 3 (darker towels) for the kitchen']},
+    id:{name:'Menjemur handuk', tools:'Mesin cuci, rak jemur',
+      cautions:['Saat berangin atau hujan, jemur di gudang','Buang serat dari jaring penangkap serat di mesin cuci'],
+      steps:['Jemur handuk dari mesin cuci','Siapkan 7 (handuk putih bersih) untuk lantai dan 3 (handuk lebih gelap) untuk dapur']}
+  },
+  'open.nabe-set':{
+    en:{name:'Setting up the hotpot', tools:'Portable stove, serving plate, ladle, lemon dish, medium tray',
+      cautions:['On cold days or bad weather, hotpots sell well, so prepare extra stoves'],
+      steps:['Set the portable stove, serving plate, ladle, and lemon dish on the medium tray (to confirm)']},
+    id:{name:'Menyiapkan hotpot', tools:'Kompor portabel, piring saji, centong, piring lemon, nampan sedang',
+      cautions:['Saat dingin atau cuaca buruk, hotpot laku, jadi siapkan kompor lebih banyak'],
+      steps:['Set kompor portabel, piring saji, centong, dan piring lemon di nampan sedang (perlu dicek)']}
+  },
+  'open.doniti':{
+    en:{name:'Weekend/holiday morning prep (outside cleaning)', tools:'Brush, broom',
+      cautions:[],
+      steps:['Do outside cleaning before the inside prep','Sprinkle water at the entrance / scrub with a brush / squeegee','Pick up trash in the parking lot / hang laundry / clean the ashtray (sometimes)','Turn on the toilet light / turn on the seat switch / turn on the air-towel power']},
+    id:{name:'Prep pagi akhir pekan/hari libur (bersih luar)', tools:'Sikat, sapu',
+      cautions:[],
+      steps:['Lakukan bersih-bersih luar sebelum prep dalam','Siram air di pintu masuk / gosok dengan sikat / squeegee','Pungut sampah di area parkir / jemur cucian / bersihkan asbak (kadang)','Nyalakan lampu toilet / nyalakan sakelar dudukan / nyalakan daya air-towel']}
+  },
+  'prep.lemon':{
+    en:{name:'Cutting lemons', tools:'Lemon, shredding bowl, knife',
+      cautions:[],
+      steps:['Cut thin into shreds in a bowl, then cut in half (5-10 pieces)','When done, bring to the front']},
+    id:{name:'Memotong lemon', tools:'Lemon, mangkuk iris, pisau',
+      cautions:[],
+      steps:['Potong tipis seperti serat di mangkuk, lalu potong jadi dua (5-10 buah)','Setelah selesai, bawa ke depan']}
+  },
+  'prep.tama-cut':{
+    en:{name:'Cutting onions', tools:'Knife, plastic bag, towel',
+      cautions:[],
+      steps:['Cut a whole sprouted onion in half. Separate the sprout','Slice thin vertically, drain moisture with a towel','Put in a plastic bag, clip it, and put in the fridge']},
+    id:{name:'Memotong bawang bombai', tools:'Pisau, kantong plastik, handuk',
+      cautions:[],
+      steps:['Potong bawang utuh yang bertunas jadi dua. Pisahkan tunasnya','Iris tipis vertikal, keringkan dengan handuk','Masukkan ke kantong plastik, jepit, dan masukkan kulkas']}
+  },
+  'prep.kamaboko':{
+    en:{name:'Cutting kamaboko', tools:'Knife',
+      cautions:['The film is clear, so check well that none is left'],
+      steps:['Peel the film off the kamaboko','Shape it and slice thin','Write the cut count on paper and keep it in a container (to confirm)']},
+    id:{name:'Memotong kamaboko', tools:'Pisau',
+      cautions:['Filmnya bening, cek baik-baik agar tidak ada yang tersisa'],
+      steps:['Kupas film dari kamaboko','Rapikan bentuk dan iris tipis','Tulis jumlah potongan di kertas dan simpan di wadah (perlu dicek)']}
+  },
+  'prep.mizuna':{
+    en:{name:'Cutting mizuna', tools:'Bowl, strainer, knife, container',
+      cautions:['The standing leaves go bad, so check well','Wash carefully'],
+      steps:['Put water in a bowl and wash leaf by leaf under running water','Take only the clean leaves, drain and put in a strainer','Cut the roots and wash in a bowl','Cut to about 3cm and lay into a drained container','Attach the cut count and bring to the front']},
+    id:{name:'Memotong mizuna', tools:'Mangkuk, saringan, pisau, wadah',
+      cautions:['Daun yang berdiri bisa rusak, jadi cek baik-baik','Cuci dengan hati-hati'],
+      steps:['Isi mangkuk dengan air dan cuci daun satu per satu di bawah air mengalir','Ambil hanya daun yang bersih, tiriskan dan taruh di saringan','Potong akar dan cuci di mangkuk','Potong sekitar 3cm dan tata di wadah yang sudah ditiriskan','Tempel jumlah potongan dan bawa ke depan']}
+  },
+  'prep.tsukemono':{
+    en:{name:'Cutting / making pickles', tools:'Bowl, cutting board, container, tray',
+      cautions:['Sizes & shapes vary, so think about how to cut'],
+      steps:['Drain the pickle juice into a bowl and cut to about 2cm on the board','Layer in a container, leaving a little sauce (to confirm)','(Making) Prepare 2 bags per tray, open and put the pickles in the container (to confirm)']},
+    id:{name:'Memotong / membuat acar', tools:'Mangkuk, talenan, wadah, nampan',
+      cautions:['Ukuran & bentuk bervariasi, pikirkan cara memotongnya'],
+      steps:['Tiriskan air acar ke mangkuk dan potong sekitar 2cm di talenan','Tata berlapis di wadah, sisakan sedikit saus (perlu dicek)','(Membuat) Siapkan 2 kantong per nampan, buka dan masukkan acar ke wadah (perlu dicek)']}
+  },
+  'prep.wakame':{
+    en:{name:'Cutting wakame', tools:'Bowl, strainer',
+      cautions:['If poorly washed, too much salt remains','Be careful not to over-soak or it melts'],
+      steps:['Put water in a bowl and rehydrate until soft','Drain in a strainer and cut lengthwise and crosswise','Put in a dated container']},
+    id:{name:'Memotong wakame', tools:'Mangkuk, saringan',
+      cautions:['Jika kurang dicuci, terlalu banyak garam tersisa','Hati-hati jangan terlalu lama direndam atau hancur'],
+      steps:['Isi mangkuk dengan air dan rendam sampai lunak','Tiriskan di saringan dan potong memanjang dan melintang','Masukkan ke wadah bertanggal']}
+  },
+  'prep.miso':{
+    en:{name:'Making miso (sweet & spicy)', tools:'Pot, container',
+      cautions:['Mix well so it doesn’t burn (to confirm)'],
+      steps:['Sweet miso: miso, sugar, mirin, sesame (to confirm)','Spicy miso: white miso, sugar, mirin, kake-dashi (to confirm)','Put in a pot, heat and warm','Put in a container and cool']},
+    id:{name:'Membuat miso (manis & pedas)', tools:'Panci, wadah',
+      cautions:['Aduk rata agar tidak gosong (perlu dicek)'],
+      steps:['Miso manis: miso, gula, mirin, wijen (perlu dicek)','Miso pedas: miso putih, gula, mirin, kake-dashi (perlu dicek)','Masukkan ke panci, panaskan dan hangatkan','Masukkan ke wadah dan dinginkan']}
+  },
+  'prep.daikon-cup':{
+    en:{name:'Daikon cups', tools:'Fork, knife, tray container',
+      cautions:['A little for tempura, two-thirds of the cup for bukkake'],
+      steps:['Put grated daikon into the cup']},
+    id:{name:'Cangkir lobak', tools:'Garpu, pisau, wadah nampan',
+      cautions:['Sedikit untuk tempura, dua per tiga cangkir untuk bukkake'],
+      steps:['Masukkan parutan lobak ke cangkir']}
+  },
+  'prep.negi':{
+    en:{name:'Green onion root cutting / white onion', tools:'Scissors, kitchen paper, knife',
+      cautions:[],
+      steps:['Thin onion: cut the roots with scissors through the bag, wipe off dirt with kitchen paper','White onion: cut into small rounds']},
+    id:{name:'Potong akar daun bawang / bawang putih iris', tools:'Gunting, tisu dapur, pisau',
+      cautions:[],
+      steps:['Daun bawang tipis: potong akar dengan gunting lewat kantong, lap kotoran dengan tisu dapur','Bawang putih iris: potong jadi irisan kecil']}
+  },
+  'prep.gyu-cut':{
+    en:{name:'Slicing beef-onion / beef / olive beef', tools:'Knife, wrap',
+      cautions:['Discard the hard parts of the beef'],
+      steps:['Beef: cut separating the green and white parts. Loosen all the green','Cut the beef into 4 and freeze','Olive beef: cut into 3, weigh to 70g, wrap and freeze']},
+    id:{name:'Mengiris daging-bawang / sapi / olive beef', tools:'Pisau, plastik wrap',
+      cautions:['Buang bagian keras dari daging sapi'],
+      steps:['Sapi: potong memisahkan bagian hijau dan putih. Urai semua bagian hijau','Potong daging jadi 4 dan bekukan','Olive beef: potong jadi 3, timbang 70g, bungkus dan bekukan']}
+  },
+  'prep.katsu':{
+    en:{name:'Katsu breading / kushi-katsu', tools:'Batter, breadcrumbs, skewer',
+      cautions:[],
+      steps:['Sprinkle salt, pepper & sake, dip in batter then coat with breadcrumbs','Skewer onion, pumpkin, sweet potato, shiitake and freeze (to confirm)']},
+    id:{name:'Pelapisan katsu / kushi-katsu', tools:'Adonan batter, tepung roti, tusukan',
+      cautions:[],
+      steps:['Taburi garam, lada & sake, celup ke batter lalu lapisi tepung roti','Tusuk bawang bombai, labu, ubi, shiitake dan bekukan (perlu dicek)']}
+  },
+  'prep.itokon':{
+    en:{name:'Konnyaku noodles / skewering oden', tools:'Pot, skewer',
+      cautions:['Cut the konnyaku noodles well so they don’t connect'],
+      steps:['Cut and blanch the oden konnyaku / blanch the konnyaku noodles','Skewer oden: skewer fried tofu, konnyaku noodles, konnyaku','Boil the pot sauce: put the sauce in a pot and bring to a boil (careful not to boil over) (to confirm)']},
+    id:{name:'Mie konnyaku / menusuk oden', tools:'Panci, tusukan',
+      cautions:['Potong mie konnyaku dengan baik agar tidak menyatu'],
+      steps:['Potong dan blansir konnyaku oden / blansir mie konnyaku','Tusuk oden: tusuk tahu goreng, mie konnyaku, konnyaku','Rebus saus panci: masukkan saus ke panci dan didihkan (hati-hati jangan meluap) (perlu dicek)']}
+  },
+  'prep.list-kusu':{
+    en:{name:'Prep list (Kusuhara-san)', tools:'',
+      cautions:[],
+      steps:['Check the oden fridge / simmer suji meat / boil konnyaku, noodles, corners / simmer beef / simmer chicken / take out next day’s beef & chicken / take out tempura chikuwa / mix white onion with carrot / prepare shiso','Cut beef-onion / cut old onion for beef-onion / cut carrot for beef-onion / simmer kitsune / prep next day’s oden (konnyaku, noodles, corners) / boil group konnyaku / peel oden eggs / simmer group fried tofu / simmer group konnyaku & noodles / plate group oden / simmer pickling konnyaku','Fry tempura / cut JA chikuwa / make sushi / cook rice / simmer sushi toppings / take out next day’s sushi tofu / take out kitsune / prep condiments before opening (field onion, wakame, kamaboko) / shred chicken & warm meat / boil pot broth into a pot / cut thin onion / cut kamaboko / cut wakame / refill Anpanman juice / refill jelly / cut lemon / make daikon cups / put group wakame & kamaboko in a container','Prep group sukiyaki / divide enoki & shimeji per person / prep lotus root & fried tofu / freeze olive beef / make split sauce / add warabimochi / portion-freeze ginger for chicken / peel ginger for udon / wash & put away dishes / make kake broth / add oden ingredients / make curry / fridge cooled curry / fridge cooled meat & chicken / fridge cooled kitsune & sushi toppings / bag drained beef-onion / bag dried pumpkin & sweet potato / fridge cooled miso (sweet/spicy) / make rice balls / freeze cooled kombu / take out next day’s shrimp / take out block shrimp / put JA vegetables in a container / sort slips / make next month’s health-record sheet / answer phone / refill solid fuel / refill wet towels / wash towels / simmer oden kombu broth / prep Thursday konnyaku / refill soy sauce, sake, mirin / refill cooking paper / wash empty pots']},
+    id:{name:'Daftar prep (Kusuhara-san)', tools:'',
+      cautions:[],
+      steps:['Cek kulkas oden / rebus daging suji / rebus konnyaku, mie, sudut / rebus daging sapi / rebus ayam / keluarkan sapi & ayam untuk besok / keluarkan chikuwa tempura / campur bawang putih dengan wortel / siapkan shiso','Potong daging-bawang / potong bawang tua untuk daging-bawang / potong wortel untuk daging-bawang / rebus kitsune / prep oden besok (konnyaku, mie, sudut) / rebus konnyaku grup / kupas telur oden / rebus tahu goreng grup / rebus konnyaku & mie grup / tata oden grup / rebus konnyaku acar','Goreng tempura / potong chikuwa JA / buat sushi / masak nasi / rebus topping sushi / keluarkan tahu sushi besok / keluarkan kitsune / siapkan bumbu sebelum buka (bawang ladang, wakame, kamaboko) / suwir ayam & hangatkan daging / rebus kuah panci ke termos / potong daun bawang tipis / potong kamaboko / potong wakame / isi ulang jus Anpanman / isi ulang jeli / potong lemon / buat cangkir lobak / masukkan wakame & kamaboko grup ke wadah','Prep sukiyaki grup / bagi enoki & shimeji per orang / prep akar teratai & tahu goreng / bekukan olive beef / buat saus belah / tambah warabimochi / bekukan porsi jahe untuk ayam / kupas jahe untuk udon / cuci & simpan piring / buat kuah kake / tambah isi oden / buat kari / kulkas kari dingin / kulkas daging & ayam dingin / kulkas kitsune & topping sushi dingin / kantongi daging-bawang tiris / kantongi labu & ubi kering / kulkas miso dingin (manis/pedas) / buat onigiri / bekukan kombu dingin / keluarkan udang besok / keluarkan udang blok / masukkan sayur JA ke wadah / rapikan nota / buat lembar catatan kesehatan bulan depan / angkat telepon / isi ulang bahan bakar padat / isi ulang handuk basah / cuci handuk / rebus kuah kombu oden / prep konnyaku Kamis / isi ulang kecap, sake, mirin / isi ulang kertas masak / cuci panci kosong']}
+  },
+  'prep.list-blank':{
+    en:{name:'Cooking prep list', tools:'',
+      cautions:[],
+      steps:['Make katsu / make karaage / peel shrimp / cut white onion / make carrot (salad, pumpkin topping, etc.) / simmer kitsune / wash, simmer & steam potato / cut roots (onion) / steam ginger / cut cabbage / grate yam / steam chicken & cut carrot / grate daikon','Make salad / grate carrot for salad / cut cabbage / do potato / cut takuan / make oden miso (sweet/spicy) / make & freeze katsu / cook & serve in the kitchen / wave udon in the kitchen / work the register / guide to seats / bring water & take orders / serve & carry / clear dishes & wipe tables / wash returned dishes / refill condiments & chopsticks / put eggs in a bowl in the prefab / put quail eggs in a container / cut mizuna / grate daikon / cut tempura eggplant, shiitake, carrot / prep fish / cut beef / weigh & freeze olive beef / weigh & freeze curry meat / refill potatoes / put inari tofu in the freezer / take chicken from the box to the freezer / freeze kitsune / peel onions / slice onions / cut donburi onion / make split pickles / make group pickles / make pot condiments / make small & large sauce / move umeboshi to a container / cut white onion']},
+    id:{name:'Daftar prep memasak', tools:'',
+      cautions:[],
+      steps:['Buat katsu / buat karaage / kupas udang / potong bawang putih / buat wortel (salad, topping labu, dll.) / rebus kitsune / cuci, rebus & kukus kentang / potong akar (bawang) / kukus jahe / potong kubis / parut ubi / kukus ayam & potong wortel / parut lobak','Buat salad / parut wortel untuk salad / potong kubis / olah kentang / potong takuan / buat miso oden (manis/pedas) / buat & bekukan katsu / masak & sajikan di dapur / kibas udon di dapur / jaga kasir / arahkan ke kursi / bawa air & ambil pesanan / sajikan & antar / angkat piring & lap meja / cuci piring kembali / isi ulang bumbu & sumpit / taruh telur di mangkuk di prefab / taruh telur puyuh di wadah / potong mizuna / parut lobak / potong terong tempura, shiitake, wortel / prep ikan / potong daging sapi / timbang & bekukan olive beef / timbang & bekukan daging kari / isi ulang kentang / taruh tahu inari di freezer / pindahkan ayam dari kotak ke freezer / bekukan kitsune / kupas bawang / iris bawang / potong bawang donburi / buat acar belah / buat acar grup / buat bumbu panci / buat saus kecil & besar / pindahkan umeboshi ke wadah / potong bawang putih']}
+  },
+  /*__TEND__*/
+ }
+};
+
+/* ---- 状態 ---- */
+var state = { screen:"entry", block:null, lane:null, role:"vet", cat:null, task:null, card:0 };
+var gloss = 'off';   // off | en | id
+const app = document.getElementById("app");
+const homebtn = document.getElementById("homebtn");
+const furibtn = document.getElementById("furibtn");
+const glossbtn = document.getElementById("glossbtn");
+
+/* 言語ボタン：日本語のみ → +English → +Bahasa → 日本語のみ */
+function toggleGloss(){
+  gloss = (gloss==='off') ? 'en' : (gloss==='en' ? 'id' : 'off');
+  glossbtn.textContent = (gloss==='off') ? '🌐 English' : (gloss==='en' ? '🌐 Bahasa' : '🌐 日本語のみ');
+  glossbtn.classList.toggle('on', gloss!=='off');
+  render();
+}
+/* 翻訳取得ヘルパー（無ければ null＝日本語のみ表示） */
+function trCat(c){ return (gloss!=='off' && TRANS.cat[c.id]) ? TRANS.cat[c.id][gloss] : null; }
+function trTask(){ var k=state.cat+'.'+state.task; return (gloss!=='off' && TRANS.task[k]) ? TRANS.task[k][gloss] : null; }
+function trTaskById(catId,taskId){ var k=catId+'.'+taskId; return (gloss!=='off' && TRANS.task[k]) ? TRANS.task[k][gloss] : null; }
+function trUI(key){ return (gloss!=='off' && TRANS.ui[gloss] && TRANS.ui[gloss][key]) ? TRANS.ui[gloss][key] : null; }
+function glL(s){ return s ? '<div class="gl">'+s+'</div>' : ''; }   /* ブロックで上に表示 */
+function glU(key){ return glL(trUI(key)); }
+
+function goHome(){ state={screen:"entry",block:null,lane:null,role:"vet",cat:null,task:null,card:0}; render(); }
+function toggleFuri(){
+  document.body.classList.toggle("fOff");
+  var off=document.body.classList.contains("fOff");
+  furibtn.textContent = off ? "ふりがな OFF" : "ふりがな ON";
+  furibtn.classList.toggle("on", !off);
+}
+function isVet(){ return state.role==="vet"; }
+function curCat(){ return CATS.find(c=>c.id===state.cat); }
+function curTask(){ var c=curCat(); return c? c.tasks.find(t=>t.id===state.task):null; }
+
+/* 中分類ごとに表示する作業を絞る */
+function menuTasks(c){
+  var tasks=c.tasks;
+  if(state.block==='closing' && state.lane==='closing-main')
+    return tasks.filter(function(t){ return t.id==='toilet' || t.id==='list-close'; });
+  if(state.block==='closing' && state.lane==='closing-nextday')
+    return tasks.filter(function(t){ return t.id==='nextday-prep'; });
+  if(state.block==='service' && state.lane==='service-nextday')
+    return tasks.filter(function(t){ return t.type==='list' || t.id==='lemon' || t.id==='tama-cut' || t.id==='kamaboko' || t.id==='mizuna' || t.id==='tsukemono' || t.id==='wakame' || t.id==='miso' || t.id==='daikon-cup' || t.id==='negi' || t.id==='gyu-cut' || t.id==='katsu' || t.id==='itokon'; });
+  return tasks;
+}
+function laneLeadSub(){
+  if(state.block==='closing' && state.lane==='closing-main') return '閉店・清掃の作業です。';
+  if(state.block==='closing' && state.lane==='closing-nextday') return '翌日に向けた準備です。';
+  if(state.block==='service' && state.lane==='service-nextday') return '営業中に進める、翌日の仕込みです。';
+  var c=curCat();
+  return (c&&c.sub?c.sub:'')+'　／　作業を選ぶと全手順が見られます';
+}
+
+/* ---- 入口（時間帯ベース） ---- */
+const ENTRY_BLOCKS = [
+  {
+    id:"preopen", ic:"🌅",
+    title:R('開店前','かいてんまえ'),
+    desc:'営業開始までに終える作業',
+    lanes:[
+      {id:"dough", name:R('生地','きじ')+R('仕込','しこ')+'み', cat:'factory'},
+      {id:"sanchoku", name:R('産直','さんちょく'), cat:null},
+      {id:"openprep", name:R('開店前','かいてんまえ')+R('準備','じゅんび'), cat:'open'}
+    ]
+  },
+  {
+    id:"service", ic:"🍜",
+    title:R('営業中','えいぎょうちゅう'),
+    desc:'提供中に進める作業',
+    lanes:[
+      {id:"service-main", name:R('営業中','えいぎょうちゅう')+'タスク', cat:'kitchen'},
+      {id:"service-group", name:R('団体','だんたい')+R('対応','たいおう'), cat:null},
+      {id:"service-nextday", name:R('次','つぎ')+'の'+R('日','ひ')+'の'+R('仕込','しこ')+'み', cat:'prep'},
+      {id:"service-evening", name:R('営業中','えいぎょうちゅう')+'タスク（'+R('夕方','ゆうがた')+'〜'+R('夜','よる')+'）', cat:'cook'}
+    ]
+  },
+  {
+    id:"closing", ic:"🧹",
+    title:R('閉店','へいてん')+R('作業','さぎょう'),
+    desc:'閉店後の片付けと引き継ぎ',
+    lanes:[
+      {id:"closing-main", name:R('閉店','へいてん')+R('作業','さぎょう'), cat:'close'},
+      {id:"closing-nextday", name:R('翌日','よくじつ')+R('準備','じゅんび'), cat:'close'}
+    ]
+  },
+  {
+    id:"frozen", ic:"🧊",
+    title:R('冷凍','れいとう')+R('製品','せいひん')+R('製造','せいぞう'),
+    desc:'店舗営業とは別運用',
+    lanes:[
+      {id:"frozen-main", name:R('冷凍','れいとう')+R('製品','せいひん')+R('製造','せいぞう'), cat:'frozen'}
+    ]
+  },
+  {
+    id:"spare", ic:"🪄",
+    title:R('空','あ')+'き'+R('時間','じかん')+'タスク',
+    desc:'手が空いた時に進める作業',
+    lanes:[
+      {id:"spare-main", name:R('空','あ')+'き'+R('時間','じかん')+'タスク', cat:null}
+    ]
+  }
+];
+
+function render(){
+  homebtn.classList.toggle("show", state.screen!=="entry" && state.screen!=="proposal");
+  if(state.screen==="proposal") return renderProposal();
+  if(state.screen==="entry") return renderEntry();
+  if(state.screen==="lane") return renderLane();
+  if(state.screen==="cat") return renderCat();
+  if(state.screen==="menu") return renderMenu();
+  if(state.screen==="task") return isVet()? renderTaskList() : renderStep();
+  if(state.screen==="printtask") return renderPrintTask();
+  if(state.screen==="printall") return renderPrintAll();
+}
+
+/* 画面0：ご提案書 */
+function renderProposal(){
+  var h='<div class="pp-title">川田うどん店 研修ツール ご提案 v2</div>';
+  h+='<div class="pp-sub">― 全スタッフ手書きシート38枚を反映 ―　2026年5月　担当：早川</div>';
+  h+='<div class="pp-intro">スタッフの皆さまの<b>手書きシート38枚（記入者9名）</b>をすべて読み取り、'+
+     '<b>細かい手順・道具・注意点まで網羅</b>して研修ツールにまとめ直しました。'+
+     '下の「研修アプリをひらく」から実物をお試しいただけます。<br><br>'+
+     '<b>※このツールはドラフトです。</b>読み取れなかったお名前は「〇〇さん」、数値・手順が不確かな所は「〔要確認〕」と表示しています。'+
+     '分かる方が追記して仕上げてください。</div>';
+
+  h+='<div class="pp-sec"><div class="pp-h">① 今回の刷新ポイント</div><div class="pp-c">';
+  h+='<div class="pp-aim"><b>◎ 冷凍製品製造（福田さん専任）を独立</b><br>福田さんは冷凍うどん等の製造専任で、ほかの方と作業が完全に別です。最上位に🧊専用ボタンを設けました。</div>';
+  h+='<div class="pp-aim"><b>◎ 時間帯で見せ方を変える</b><br>'+
+     '最初に<b>開店前／営業中／閉店作業／冷凍製造／空き時間</b>を選び、次に<b>作業別</b>へ進みます。<br>'+
+     '各作業は<b>全手順を一覧表示</b>でき、<b>作業ごとに印刷</b>（紙の指示書）もできます。</div>';
+  h+='</div></div>';
+
+  h+='<div class="pp-sec"><div class="pp-h">② 解決したい課題</div><div class="pp-c">';
+  h+='<div class="pp-pain"><b>やり方が人によってバラバラ</b><br>同じ作業でも教える人によってやり方が変わってしまう。</div>';
+  h+='<div class="pp-pain"><b>教える側の負担／「言った・言ってない」問題</b><br>毎回口頭で教える負担。ミス時に水掛け論になりやすい（特にタイミーさん）。</div>';
+  h+='＝ 目指すのは <b>「やり方の標準化」と「指導記録を形に残すこと」</b>。だから印刷（紙の指示書）を各作業に付けました。';
+  h+='</div></div>';
+
+  h+='<div class="pp-sec"><div class="pp-h">③ なぜAIチャットを主役にしないか</div><div class="pp-c">';
+  h+='AIチャットも作って試しましたが、研修・標準化には主役に不向きと判断（受け身・誤認識・答えがぶれる・オーバースペック）。'+
+     '<b>タップだけ＝誤作動ゼロ＝必ず正しい手順＝標準化</b>のボタン式が最適です。完全無料・ネット不要・ふりがなON/OFF対応。';
+  h+='</div></div>';
+
+  h+='<button class="pp-start" onclick="state.screen=\'entry\';render();">▶ 研修アプリを ひらいて試す</button>';
+  h+='<div class="pp-note">タップだけで手順が見られます。AIなし・完全無料。</div>';
+  app.innerHTML=h;
+  window.scrollTo(0,0);
+}
+
+/* 画面1：入口（時間帯） */
+function renderEntry(){
+  var h='<div class="lead">'+R('時間帯','じかんたい')+'で'+R('選','えら')+'んでください</div>';
+  h+='<div class="lead-sub">まずは、いまの'+R('作業','さぎょう')+'タイミングを'+R('選','えら')+'びます。</div>';
+  h+='<div class="bigbtns">';
+  ENTRY_BLOCKS.forEach(function(b){
+    h+='<div class="bigbtn" onclick="pickBlock(\''+b.id+'\')">'+
+       '<div class="ic">'+b.ic+'</div>'+
+       '<div><div class="bt">'+b.title+'</div><div class="bd">'+b.desc+'</div></div></div>';
+  });
+  h+='</div>';
+  h+='<button class="printlink" onclick="state.screen=\'printall\';render();">🖨️ '+R('全','ぜん')+'ての'+R('手順','てじゅん')+'を '+R('紙','かみ')+'に'+R('印刷','いんさつ')+'する</button>';
+  app.innerHTML=h;
+  window.scrollTo(0,0);
+}
+function pickBlock(id){ state.block=id; state.lane=null; state.cat=null; state.task=null; state.card=0; state.screen="lane"; render(); }
+
+/* 画面2：中分類 */
+function renderLane(){
+  var b=ENTRY_BLOCKS.find(function(x){ return x.id===state.block; });
+  if(!b){ goHome(); return; }
+  var h='<div class="lead">'+b.ic+' '+b.title+'</div>';
+  h+='<div class="lead-sub">'+b.desc+'。'+R('作業別','さぎょうべつ')+'に'+R('選','えら')+'んでください。</div>';
+  b.lanes.forEach(function(l){
+    h+='<div class="catbtn" onclick="pickLane(\''+l.id+'\')">'+
+       '<div class="ic">📌</div>'+
+       '<div><div class="ct">'+l.name+'</div>'+
+       '<div class="cd">'+(l.cat?'このカテゴリの作業を表示します':'作業はこれから追加します')+'</div></div></div>';
+  });
+  h+='<div class="backrow"><button onclick="goHome()">← '+R('最初','さいしょ')+'にもどる</button></div>';
+  app.innerHTML=h;
+  window.scrollTo(0,0);
+}
+function pickLane(id){
+  var b=ENTRY_BLOCKS.find(function(x){ return x.id===state.block; });
+  if(!b) return goHome();
+  var lane=b.lanes.find(function(x){ return x.id===id; });
+  if(!lane) return;
+  state.lane=id;
+  state.task=null;
+  state.card=0;
+  if(!lane.cat){ state.screen="menu"; state.cat=null; render(); return; }
+  state.cat=lane.cat;
+  state.screen="menu";
+  render();
+}
+
+/* 画面2：カテゴリ */
+function renderCat(){
+  var h='<div class="lead">どの'+R('仕事','しごと')+'ですか？</div>';
+  h+='<div class="lead-sub">カテゴリを'+R('選','えら')+'んでください。</div>';
+  CATS.forEach(function(c){
+    var ct=trCat(c);
+    h+='<div class="catbtn'+(c.frozen?' frozen':'')+'" onclick="pickCat(\''+c.id+'\')">'+
+       '<div class="ic">'+c.ic+'</div>'+
+       '<div><div class="ct">'+glL(ct&&ct.name)+c.name+'</div>'+
+       '<div class="cd">'+glL(ct&&ct.sub)+c.sub+'</div>'+
+       (c.note?'<div class="cn">'+glL(ct&&ct.note)+c.note+'</div>':'')+'</div></div>';
+  });
+  h+='<div class="backrow"><button onclick="goHome()">← '+R('時間帯','じかんたい')+'を'+R('選','えら')+'びなおす</button></div>';
+  app.innerHTML=h;
+  window.scrollTo(0,0);
+}
+function pickCat(id){ state.cat=id; state.screen="menu"; render(); }
+
+/* 画面3：作業えらび */
+function renderMenu(){
+  if(!state.cat){
+    var nh='<div class="lead">'+R('作業','さぎょう')+'を'+R('準備中','じゅんびちゅう')+'です</div>';
+    nh+='<div class="lead-sub">'+R('内容','ないよう')+'が'+R('確定','かくてい')+'しだい、この'+R('画面','がめん')+'に'+R('追加','ついか')+'します。</div>';
+    nh+='<div class="backrow"><button onclick="state.screen=\'lane\';render();">← '+R('中分類','ちゅうぶんるい')+'にもどる</button></div>';
+    app.innerHTML=nh;
+    window.scrollTo(0,0);
+    return;
+  }
+  var c=curCat(); var ct=trCat(c);
+  var tasks=menuTasks(c);
+  var h='<div class="lead">'+glL(ct&&ct.name)+c.ic+' '+c.name+'</div>';
+  h+='<div class="lead-sub">'+laneLeadSub()+'</div>';
+  h+='<div class="grid">';
+  tasks.forEach(function(t){
+    var tt=trTaskById(c.id,t.id);
+    h+='<div class="taskbtn'+(c.frozen?' frozen':'')+'" onclick="pickTask(\''+t.id+'\')">'+
+       '<div class="ic">'+t.ic+'</div><div class="nm">'+glL(tt&&tt.name)+t.name+'</div></div>';
+  });
+  h+='</div>';
+  h+='<div class="backrow"><button onclick="state.screen=\'lane\';render();">← '+R('中分類','ちゅうぶんるい')+'にもどる</button></div>';
+  app.innerHTML=h;
+  window.scrollTo(0,0);
+}
+function pickTask(id){ state.task=id; state.card=0; state.screen="task"; render(); }
+
+/* 画面4A：ステップ（新人・タイミー）*/
+function renderStep(){
+  var t=curTask(); var tt=trTask();
+  var tc=tt&&tt.cautions, ts=tt&&tt.steps;
+  var total=t.steps.length, c=state.card;
+  var h='', shown=c+1, totalCards=total+2;
+  h+='<div class="progress"><div class="bar"><div class="fill" style="width:'+
+     Math.round(shown/totalCards*100)+'%"></div></div>'+
+     '<div class="txt">'+shown+' / '+totalCards+'</div></div>';
+  function cauHtml(){ return t.cautions.map(function(x,i){ return ((tc&&tc[i])?'<span class="gl">'+tc[i]+'</span>':'')+'・'+x; }).join('<br>'); }
+  if(c===0){
+    h+='<div class="stepcard">';
+    h+='<span class="badge intro">'+(trUI('beginning')||'はじめに')+'</span>';
+    h+='<div class="stitle">'+glL(tt&&tt.name)+t.ic+' '+t.name+'</div>';
+    h+='<div class="sbody">'+glU('learnThis')+'この'+R('作業','さぎょう')+'の'+R('手順','てじゅん')+'を'+R('確認','かくにん')+'します。</div>';
+    if(t.tools) h+='<div class="infoblock tool"><span class="h">🧰 '+(trUI('tools')||R('使','つか')+'う'+R('道具','どうぐ'))+'</span>'+glL(tt&&tt.tools)+t.tools+'</div>';
+    if(t.cautions&&t.cautions.length){
+      h+='<div class="infoblock '+(t.danger?'danger':'caution')+'"><span class="h">'+(t.danger?'☠️ '+(trUI('dangerLabel')||'きけん！必ず守る'):'⚠️ '+(trUI('cautionsLabel')||R('注意','ちゅうい')+'すること'))+'</span>'+cauHtml()+'</div>';
+    }
+    h+='</div>';
+  } else if(c<=total){
+    h+='<div class="stepcard">';
+    h+='<span class="badge">'+(trUI('step')||R('手順','てじゅん'))+' '+c+'</span>';
+    h+='<div class="sbody">'+((ts&&ts[c-1])?'<div class="gl">'+ts[c-1]+'</div>':'')+t.steps[c-1]+'</div>';
+    h+='</div>';
+  } else {
+    h+='<div class="stepcard">';
+    h+='<span class="badge done">'+(trUI('done')||R('完了','かんりょう'))+'</span>';
+    h+='<div class="stitle">'+glU('goodjob')+'おつかれさまでした！🎉</div>';
+    h+='<div class="sbody">「'+t.name+'」の'+R('手順','てじゅん')+'は ここまでです。\nもう一度見たいときは「← 前」、ほかの作業は下のボタンを押してください。</div>';
+    if(t.cautions&&t.cautions.length){
+      h+='<div class="infoblock '+(t.danger?'danger':'caution')+'"><span class="h">'+(t.danger?'☠️ '+(trUI('dangerLabel')||'きけんのおさらい'):'⚠️ '+(trUI('cautionsLabel')||R('注意','ちゅうい')+'のおさらい'))+'</span>'+cauHtml()+'</div>';
+    }
+    h+='</div>';
+  }
+  h+='<div class="nav">';
+  h+='<button class="prev" '+(c===0?'disabled':'')+' onclick="moveCard(-1)">← '+(trUI('prev')||R('前','まえ'))+'</button>';
+  if(c<=total){
+    h+='<button class="next" onclick="moveCard(1)">'+(c===total?(trUI('toLast')||R('最後','さいご')+'へ'):(trUI('next')||R('次','つぎ'))+' →')+'</button>';
+  } else {
+    h+='<button class="finish" onclick="state.screen=\'menu\';render();">'+(trUI('otherTask')||'ほかの'+R('作業','さぎょう')+'を'+R('選','えら')+'ぶ')+'</button>';
+  }
+  h+='</div>';
+  h+='<div class="backrow"><button onclick="state.screen=\'menu\';render();">'+R('作業','さぎょう')+R('選','えら')+'びにもどる</button></div>';
+  app.innerHTML=h;
+  window.scrollTo(0,0);
+}
+function moveCard(d){
+  var t=curTask();
+  state.card=Math.max(0,Math.min(t.steps.length+1,state.card+d));
+  render();
+}
+
+/* 画面4B：全手順一覧（中堅・ベテラン）*/
+function renderTaskList(){
+  var t=curTask(); var tt=trTask();
+  var tc=tt&&tt.cautions, ts=tt&&tt.steps;
+  var h='<div class="listcard">';
+  h+='<h2>'+glL(tt&&tt.name)+t.ic+' '+t.name+'</h2>';
+  h+='<div class="meta"></div>';
+  if(t.tools) h+='<div class="infoblock tool"><span class="h">🧰 '+(trUI('tools')||R('使','つか')+'う'+R('道具','どうぐ'))+'</span>'+glL(tt&&tt.tools)+t.tools+'</div>';
+  if(t.cautions&&t.cautions.length){
+    h+='<div class="infoblock '+(t.danger?'danger':'caution')+'"><span class="h">'+(t.danger?'☠️ '+(trUI('dangerLabel')||'きけん！必ず守る'):'⚠️ '+(trUI('cautionsLabel')||R('注意','ちゅうい')+'すること'))+'</span>'+
+       t.cautions.map(function(x,i){return ((tc&&tc[i])?'<span class="gl">'+tc[i]+'</span>':'')+'・'+x;}).join('<br>')+'</div>';
+  }
+  var liHtml=t.steps.map(function(s,i){return '<li>'+((ts&&ts[i])?'<span class="gl">'+ts[i]+'</span>':'')+s+'</li>';}).join('');
+  if(t.type==='list'){
+    h+='<ul class="plain">'+liHtml+'</ul>';
+    h+='<div class="check" style="margin-top:12px;">'+glL(trUI('isList'))+'📌 これは作業の'+R('一覧','いちらん')+'です。1つずつの'+R('手順','てじゅん')+'は今後このツールに追記していきます。</div>';
+  } else {
+    h+='<ol>'+liHtml+'</ol>';
+  }
+  h+='</div>';
+  h+='<button class="printlink" onclick="state.screen=\'printtask\';render();">'+glL(trUI('printThis'))+'🖨️ この'+R('作業','さぎょう')+'を'+R('紙','かみ')+'に'+R('印刷','いんさつ')+'する（'+R('指示書','しじしょ')+'）</button>';
+  h+='<div class="nav"><button class="finish" onclick="state.screen=\'menu\';render();">'+(trUI('otherTask')||'ほかの'+R('作業','さぎょう')+'を'+R('選','えら')+'ぶ')+'</button></div>';
+  h+='<div class="backrow"><button onclick="goHome()">← '+R('最初','さいしょ')+'にもどる</button></div>';
+  app.innerHTML=h;
+  window.scrollTo(0,0);
+}
+
+/* 作業ごと印刷（指示書）*/
+function renderPrintTask(){
+  var t=curTask(), c=curCat();
+  var h='<div class="pbar noprint">';
+  h+='<button class="pbtn" onclick="window.print()">🖨️ いま印刷する</button>';
+  h+='<button class="pbtn back" onclick="state.screen=\'task\';render();">← もどる</button></div>';
+  h+='<div class="printview">';
+  var tt=trTask(); var tc=tt&&tt.cautions, ts=tt&&tt.steps;
+  h+='<div class="ptitle">'+glL(tt&&tt.name)+t.ic+' '+t.name+'</div>';
+  h+='<div class="psub">川田うどん店 業務指示書 ／ '+c.name+'</div>';
+  h+='<div class="signrow">指導日：____年__月__日　　指導者サイン：__________　　受講者サイン：__________</div>';
+  h+='<div class="ptask">';
+  if(t.tools) h+='<div class="pinfo">🧰 使う道具：'+glL(tt&&tt.tools)+t.tools+'</div>';
+  if(t.cautions&&t.cautions.length) h+='<div class="pinfo">⚠️ 注意：'+t.cautions.map(function(x,i){return ((tc&&tc[i])?'<span class="gl">'+tc[i]+'</span>':'')+'・'+x;}).join('<br>')+'</div>';
+  var pli=t.steps.map(function(s,i){return '<li>'+((ts&&ts[i])?'<span class="gl">'+ts[i]+'</span>':'')+s+'</li>';}).join('');
+  if(t.type==='list'){ h+='<ul class="psteps">'+pli+'</ul>'; }
+  else { h+='<ol class="psteps">'+pli+'</ol>'; }
+  h+='</div></div>';
+  app.innerHTML=h;
+  window.scrollTo(0,0);
+}
+
+/* 全業務 印刷 */
+function renderPrintAll(){
+  var h='<div class="pbar noprint">';
+  h+='<button class="pbtn" onclick="window.print()">🖨️ いま印刷する</button>';
+  h+='<button class="pbtn back" onclick="goHome()">← もどる</button></div>';
+  h+='<div class="printview">';
+  h+='<div class="ptitle">川田うどん'+R('店','てん')+' '+R('業務','ぎょうむ')+'マニュアル v2</div>';
+  h+='<div class="psub">出典：スタッフ手書きシート38枚 ／ 2026年5月</div>';
+  CATS.forEach(function(c){
+    var ct=trCat(c);
+    h+='<h2 style="color:var(--brown-d);margin:18px 0 8px;font-size:18px;">'+glL(ct&&ct.name)+c.ic+' '+c.name+'（'+c.sub+'）</h2>';
+    c.tasks.forEach(function(t){
+      var tt=trTaskById(c.id,t.id); var tc=tt&&tt.cautions, ts=tt&&tt.steps;
+      h+='<div class="ptask">';
+      h+='<h2>'+glL(tt&&tt.name)+t.ic+' '+t.name+'</h2>';
+      if(t.tools) h+='<div class="pinfo">🧰 使う道具：'+glL(tt&&tt.tools)+t.tools+'</div>';
+      if(t.cautions&&t.cautions.length) h+='<div class="pinfo">⚠️ 注意：'+t.cautions.map(function(x,i){return ((tc&&tc[i])?'<span class="gl">'+tc[i]+'</span>':'')+'・'+x;}).join('<br>')+'</div>';
+      var pli=t.steps.map(function(s,i){return '<li>'+((ts&&ts[i])?'<span class="gl">'+ts[i]+'</span>':'')+s+'</li>';}).join('');
+      if(t.type==='list'){ h+='<ul class="psteps">'+pli+'</ul>'; }
+      else { h+='<ol class="psteps">'+pli+'</ol>'; }
+      h+='</div>';
+    });
+  });
+  h+='</div>';
+  app.innerHTML=h;
+  window.scrollTo(0,0);
+}
+
+render();
+</script>
+</body>
+</html>
